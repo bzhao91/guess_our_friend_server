@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'games/new'
+
+  get 'challenges/new'
+
   get 'friend/new'
 
   resources :users
