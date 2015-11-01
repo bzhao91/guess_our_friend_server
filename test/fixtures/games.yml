@@ -1,11 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  id: 1
   player1id: 1
   player2id: 1
 
 two:
-  id: 1
   player1id: 1
   player2id: 1

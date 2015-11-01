@@ -1,7 +1,6 @@
-class CreateGames < ActiveRecord::Migration
+class CreateChallenges < ActiveRecord::Migration
   def change
-    create_table :games do |t|
-      t.integer :id
+    create_table :challenges do |t|
       t.integer :player1id
       t.integer :player2id
 
