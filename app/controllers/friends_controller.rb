@@ -7,11 +7,8 @@ class FriendsController < ApplicationController
 
   end
   
-  def signup_fb
-    
-  end
-
   def update
+  
   end
 
   def show

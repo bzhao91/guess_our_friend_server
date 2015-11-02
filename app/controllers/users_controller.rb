@@ -18,10 +18,31 @@ class UsersController < ApplicationController
     
   end
 
-  def update
+  def update_rating
+    #get new rating from front-end
+    new_rating = params[:new_rating]
+    total_rating = @user.rating * @user.number_ratings
+    total_rating = total_rating + new_rating
+    @user.update_attribute(:number_ratings, @user.number_ratings+1)
+    @user.update_attribute(:rating, total_rating/@user.number_ratings)
+  end
+  
+  def update_postmatch
+    #need to include a way of identifying user
+    if win
+      @user.update_attribute(:matches_won,  @user.matches_won+1)
+    else
+      @user.update_attribute(:matches_lost, @user.matches_lost+1)
+    end
+    #calculate change in points
+    @user.update_attribute(:points, @user.points+1)
   end
 
-  def show
+  def show_fb_id
+
+  end
+  
+  def show_info
     
   end
   
@@ -30,6 +51,7 @@ class UsersController < ApplicationController
   
   private
     def user_params
+      #needs update
       params.require(:user).permit(:name, :email)
     end
     

@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151101174849) do
+ActiveRecord::Schema.define(version: 20151102225443) do
 
   create_table "challenges", force: :cascade do |t|
     t.integer  "player1id"
     t.integer  "player2id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean  "incoming"
   end
 
   create_table "friends", force: :cascade do |t|
@@ -36,8 +37,14 @@ ActiveRecord::Schema.define(version: 20151101174849) do
   create_table "users", force: :cascade do |t|
     t.string   "email"
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.integer  "matches_won",    default: 0
+    t.integer  "matches_lost",   default: 0
+    t.integer  "points",         default: 0
+    t.decimal  "rating",         default: 0.0
+    t.integer  "number_ratings", default: 0
+    t.string   "fb_id"
   end
 
 end
