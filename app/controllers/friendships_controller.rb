@@ -14,10 +14,18 @@ class FriendshipsController < AuthController
     
   end
   
-  def destroy
-  
+  def unfriend
+    friend = User.find(params[:friend_id]) #friend 
+    if friend
+      friendship = Friendship.find_by_user_id_and_friend_id(@current_user.id, friend.id)
+      if friendship
+        friendship.update_attribute(:active, false)
+      end
+      friendship = Friendship.find_by_user_id_and_friend_id(friend.id, @current_user.id)
+      friendship.update_attribute(:active, false)
+    end
+    render json: {message: "Successfully unfriended #{friend.first_name}"}
   end
-  
   
   def update_friend_list
     # request on facebook to get friends that installed the app
@@ -33,7 +41,7 @@ class FriendshipsController < AuthController
         end
       end
     end
-    query = "SELECT * FROM users WHERE users.id IN (SELECT friendships.friend_id FROM friendships WHERE friendships.user_id = '#{@current_user.id}')"
+    query = "SELECT * FROM users WHERE users.id IN (SELECT friendships.friend_id FROM friendships WHERE friendships.user_id = '#{@current_user.id}' AND friendships.active = true)"
     render json: {friends: User.find_by_sql(query)}
   end
   
