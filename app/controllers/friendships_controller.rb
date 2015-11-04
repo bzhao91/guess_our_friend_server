@@ -33,8 +33,8 @@ class FriendshipsController < AuthController
         end
       end
     end
-    
-    render json: {friends: @current_user.friends}
+    query = "SELECT * FROM users WHERE users.id IN (SELECT friendships.friend_id FROM friendships WHERE friendships.user_id = #{@current_user.id}"
+    User.find_by_sql(query)
   end
   
   private
