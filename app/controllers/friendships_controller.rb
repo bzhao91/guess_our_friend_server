@@ -12,18 +12,20 @@ class FriendshipsController < AuthController
     if friend
       friendship = Friendship.find_by_user_id_and_friend_id(@current_user.id, friend.id)
       if friendship
-        if action == 'unfriend'
+        if action == 'unfriend' && friendship.active == true
           friendship.update_attribute(:active, false)
           friendship = Friendship.find_by_user_id_and_friend_id(friend.id, @current_user.id)
           friendship.update_attribute(:active, false)
+        elsif action == 'refriend' && friendship.active == false
+          friendship.update_attribute(:active, true)
+          friendship = Friendship.find_by_user_id_and_friend_id(friend.id, @current_user.id)
+          friendship.update_attribute(:active, true)
         else
-          friendship.update_attribute(:active, true)
-          friendship = Friendship.find_by_user_id_and_friend_id(friend.id, @current_user.id)
-          friendship.update_attribute(:active, true)
+          render json: {errors: 'Invalid option'}, :status => 801 and return
         end
       end
     end
-    render json: {message: "Successfully unfriended #{friend.first_name}"}
+    render json: {message: "Successfully #{action.downcase == 'unfriend' ? 'unfriended' : 'refriended'} #{friend.first_name}"}
   end
   
   def update_friend_list
