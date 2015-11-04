@@ -22,9 +22,9 @@ class FriendshipsController < AuthController
   def update_friend_list
     # request on facebook to get friends that installed the app
     friends = params[:friends]
-    arr = friends['data']
+    arr = friends[:data]
     arr.each do |f|
-      friend = User.find_by_fb_id(f['id'])
+      friend = User.find_by_fb_id(f[:id])
       if friend
         friendship = Friendship.find_by_user_id_and_friend_id(@current_user.id, friend.id)
         unless friendship
