@@ -25,7 +25,7 @@ class FriendshipsController < AuthController
     arr = friends[:data]
     arr.each do |f|
       friend = User.find_by_fb_id(f[:id])
-      render json: friend.to_json
+      render json: friend.to_json and return
       if friend
         friendship = Friendship.find_by_user_id_and_friend_id(@current_user.id, friend.id)
         unless friendship
