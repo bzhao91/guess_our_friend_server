@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   
   put 'user/update_postmatch', to: 'users#update_postmatch'
   
-  put ''
+  
   resources :users
   
   resources :challenges
