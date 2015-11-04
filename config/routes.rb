@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   
   put 'friend_list', to: 'friendships#update_friend_list'
   
-  put 'unfriend', to: 'friendships#unfriend'
+  put 'friend_status', to: 'friendships#friend_status'
   
   put 'user/update_rating', to: 'users#update_rating'
   

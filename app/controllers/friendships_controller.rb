@@ -2,27 +2,26 @@ class FriendshipsController < AuthController
   protect_from_forgery
   skip_before_action :verify_authenticity_token
   before_action :login?
-  def index
-  
-  end
-  
-  def update
-  
-  end
 
-  def show
-    
-  end
-  
-  def unfriend
-    friend = User.find(params[:friend_id]) #friend 
+  def friend_status
+    friend = User.find(params[:friend_id]) #friend
+    action = params[:option]
+    if action.downcase != 'unfriend' && action.downcase != 'refriend'
+      render json: {errors: 'Invalid option'}, :status => 801 and return
+    end
     if friend
       friendship = Friendship.find_by_user_id_and_friend_id(@current_user.id, friend.id)
       if friendship
-        friendship.update_attribute(:active, false)
+        if action == 'unfriend'
+          friendship.update_attribute(:active, false)
+          friendship = Friendship.find_by_user_id_and_friend_id(friend.id, @current_user.id)
+          friendship.update_attribute(:active, false)
+        else
+          friendship.update_attribute(:active, true)
+          friendship = Friendship.find_by_user_id_and_friend_id(friend.id, @current_user.id)
+          friendship.update_attribute(:active, true)
+        end
       end
-      friendship = Friendship.find_by_user_id_and_friend_id(friend.id, @current_user.id)
-      friendship.update_attribute(:active, false)
     end
     render json: {message: "Successfully unfriended #{friend.first_name}"}
   end
