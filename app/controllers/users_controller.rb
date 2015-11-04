@@ -39,14 +39,9 @@ class UsersController < AuthController
     @current_user.update_attribute(:points, @current_user.points+1)
   end
 
-  def show_fb_id
-
+  def show
+    render json: @current_user.to_json
   end
-  
-  def show_info
-    
-  end
-  
   def destroy
   end
   
