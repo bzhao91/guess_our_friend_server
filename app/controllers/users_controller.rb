@@ -4,7 +4,6 @@ class UsersController < AuthController
   before_action :login?, :except => [:create]
   
   def create
-    render text: "hello" and return
     @user = User.new(user_params)
     if @user.save
       token = JWT.encode(@user, Rails.application.secrets.secret_key_base)
