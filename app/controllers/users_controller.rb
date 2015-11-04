@@ -15,8 +15,6 @@ class UsersController < AuthController
   
   def signup_fb
     
-    
-    
   end
 
   def update_rating
@@ -30,6 +28,7 @@ class UsersController < AuthController
   
   def update_postmatch
     #need to include a way of identifying user
+    win = params[:win]
     if win
       @current_user.update_attribute(:matches_won,  @current_user.matches_won+1)
     else
@@ -43,9 +42,10 @@ class UsersController < AuthController
     render json: @current_user.to_json
   end
   
-  def destroy
+  def friend_list
+    render json: {friends: @current_user.friends}
   end
-  
+
   private
     def user_params
       #needs update

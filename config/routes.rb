@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   
   get 'user', to: 'users#show'
   
+  get 'friend_list', to: 'friendships#update_friend_list'
+  
+  
   put 'user/update_rating', to: 'users#update_rating'
   
   put 'user/update_postmatch', to: 'users#update_postmatch'
