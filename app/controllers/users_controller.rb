@@ -15,6 +15,8 @@ class UsersController < AuthController
   
   def signup_fb
     
+    
+    
   end
 
   def update_rating
