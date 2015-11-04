@@ -6,7 +6,7 @@ class FriendshipsController < AuthController
   def friend_status
     friend = User.find(params[:friend_id]) #friend
     action = params[:option]
-    if action.downcase != 'unfriend' && action.downcase != 'refriend'
+    if action.nil? == true || (action.downcase != 'unfriend' && action.downcase != 'refriend')
       render json: {errors: 'Invalid option'}, :status => 801 and return
     end
     if friend
