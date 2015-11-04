@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151102225443) do
+ActiveRecord::Schema.define(version: 20151104004552) do
 
   create_table "challenges", force: :cascade do |t|
     t.integer  "player1id"
@@ -35,8 +35,7 @@ ActiveRecord::Schema.define(version: 20151102225443) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email"
-    t.string   "name"
+    t.string   "first_name"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
     t.integer  "matches_won",    default: 0
@@ -45,6 +44,9 @@ ActiveRecord::Schema.define(version: 20151102225443) do
     t.decimal  "rating",         default: 0.0
     t.integer  "number_ratings", default: 0
     t.string   "fb_id"
+    t.string   "last_name"
   end
+
+  add_index "users", ["fb_id"], name: "index_users_on_fb_id", unique: true
 
 end

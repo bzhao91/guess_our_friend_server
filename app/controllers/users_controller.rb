@@ -1,14 +1,13 @@
-class UsersController < ApplicationController
+class UsersController < AuthController
   protect_from_forgery
   skip_before_action :verify_authenticity_token
-  def index
-  
-  end
+  before_action :login?, :except => [:create]
   
   def create
     @user = User.new(user_params)
     if @user.save
-      render json: @user.to_json
+      token = JWT.encode(@user, Rails.application.secrets.secret_key_base)
+      render json: {user: @user.to_json, token: token}
     else
       render json: {errors: @user.errors}
     end
@@ -21,21 +20,21 @@ class UsersController < ApplicationController
   def update_rating
     #get new rating from front-end
     new_rating = params[:new_rating]
-    total_rating = @user.rating * @user.number_ratings
+    total_rating = @current_user.rating * @current_user.number_ratings
     total_rating = total_rating + new_rating
-    @user.update_attribute(:number_ratings, @user.number_ratings+1)
-    @user.update_attribute(:rating, total_rating/@user.number_ratings)
+    @current_user.update_attribute(:number_ratings, @current_user.number_ratings+1)
+    @current_user.update_attribute(:rating, total_rating/@current_user.number_ratings)
   end
   
   def update_postmatch
     #need to include a way of identifying user
     if win
-      @user.update_attribute(:matches_won,  @user.matches_won+1)
+      @current_user.update_attribute(:matches_won,  @current_user.matches_won+1)
     else
-      @user.update_attribute(:matches_lost, @user.matches_lost+1)
+      @current_user.update_attribute(:matches_lost, @current_user.matches_lost+1)
     end
     #calculate change in points
-    @user.update_attribute(:points, @user.points+1)
+    @current_user.update_attribute(:points, @current_user.points+1)
   end
 
   def show_fb_id
@@ -52,7 +51,18 @@ class UsersController < ApplicationController
   private
     def user_params
       #needs update
-      params.require(:user).permit(:name, :email)
+      params.require(:user).permit(:first_name, :last_name, :fb_id)
     end
+    
+    def login?
+      unless @current_user
+        render json: {errors: "Please log in"}, :status => 800
+      end
+    end
+    
+    def get_fb_user(access_token)
+      RestClient.get 'https://graph.facebook.com//v2.3/me', :params => { :access_token => access_token}
+    end
+    
     
 end

@@ -1,4 +1,16 @@
 class ChallengesController < ApplicationController
-  def new
+  def create
+    
   end
+  
+  def destroy
+  
+  end
+  
+  def update
+  end
+  
+  def index
+  end
+
 end

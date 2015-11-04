@@ -5,8 +5,11 @@ Rails.application.routes.draw do
 
   get 'friend/new'
   
-  put 'user/rating', to: 'users#update_rating'
-
+  put 'user/update_rating', to: 'users#update_rating'
+  
+  put 'user/update_postmatch', to: 'users#update_postmatch'
+  
+  put ''
   resources :users
   
   resources :challenges
