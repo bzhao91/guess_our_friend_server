@@ -42,6 +42,7 @@ class UsersController < AuthController
   def show
     render json: @current_user.to_json
   end
+  
   def destroy
   end
   

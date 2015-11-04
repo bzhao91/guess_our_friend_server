@@ -5,12 +5,15 @@ Rails.application.routes.draw do
 
   get 'friend/new'
   
+  get 'user', to: 'users#show'
+  
   put 'user/update_rating', to: 'users#update_rating'
   
   put 'user/update_postmatch', to: 'users#update_postmatch'
   
   
   resources :users
+  #'user/:id' => users#show
   
   resources :challenges
   
