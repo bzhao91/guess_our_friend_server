@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151104025119) do
+ActiveRecord::Schema.define(version: 20151104043005) do
 
   create_table "challenges", force: :cascade do |t|
     t.integer  "player1id"
@@ -22,10 +22,11 @@ ActiveRecord::Schema.define(version: 20151104025119) do
   end
 
   create_table "friendships", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.integer  "user_id"
     t.integer  "friend_id"
+    t.boolean  "active",     default: true
   end
 
   add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id"
