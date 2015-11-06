@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   
   get 'user/outgoing_challenges', to: 'challenges#show_outgoing_challenges'
   
+  get 'user/incoming_challenges', to: 'challenges#show_incoming_challenges'
   resources :users
   #'user/:id' => users#show
   
