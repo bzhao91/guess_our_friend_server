@@ -3,7 +3,7 @@ class ChallengesController < AuthController
   skip_before_action :verify_authenticity_token
   before_action :login?
   def create
-    challengee = User.find(params[:challengee_id])
+    challengee = User.find_by_id(params[:challengee_id])
     unless challengee
       render json: {errors: "Opponent does not exist"}, :status => 802
       return
@@ -50,11 +50,11 @@ class ChallengesController < AuthController
   end
   
   def challenger_respond
-    challengee = User.find(params[:challengee_id])
+    challengee = User.find_by_id(params[:challengee_id])
     unless challengee
       render json: {errors: "Challenge does not exist"}, :status => 806 and return
     end
-    challenge = Challenge.find(params[:challenge_id])
+    challenge = Challenge.find_by_id(params[:challenge_id])
     unless challenge
       render json: {errors: "Challenge does not exist"}, :status => 806 and return
     end
