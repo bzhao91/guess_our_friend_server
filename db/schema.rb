@@ -11,15 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151104043005) do
+ActiveRecord::Schema.define(version: 20151106020415) do
 
   create_table "challenges", force: :cascade do |t|
-    t.integer  "player1id"
-    t.integer  "player2id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean  "incoming"
+    t.integer  "challenger_id"
+    t.integer  "challengee_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
+
+  add_index "challenges", ["challengee_id", "challenger_id"], name: "index_challenges_on_challengee_id_and_challenger_id", unique: true
+  add_index "challenges", ["challengee_id"], name: "index_challenges_on_challengee_id"
+  add_index "challenges", ["challenger_id", "challengee_id"], name: "index_challenges_on_challenger_id_and_challengee_id", unique: true
+  add_index "challenges", ["challenger_id"], name: "index_challenges_on_challenger_id"
 
   create_table "friendships", force: :cascade do |t|
     t.datetime "created_at",                null: false
@@ -29,6 +33,7 @@ ActiveRecord::Schema.define(version: 20151104043005) do
     t.boolean  "active",     default: true
   end
 
+  add_index "friendships", ["friend_id", "user_id"], name: "index_friendships_on_friend_id_and_user_id", unique: true
   add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id"
   add_index "friendships", ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_id", unique: true
   add_index "friendships", ["user_id"], name: "index_friendships_on_user_id"
