@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   
   put 'user/update_postmatch', to: 'users#update_postmatch'
   
+  get 'user/outgoing_challenges', to: 'challenges#show_outgoing_challenges'
   
   resources :users
   #'user/:id' => users#show
