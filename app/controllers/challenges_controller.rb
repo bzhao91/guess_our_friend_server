@@ -28,7 +28,7 @@ class ChallengesController < AuthController
   end
   
   def show_outgoing_challenges
-    query = "SELECT c.id as challenge_id, c.challengee_id as challengee_id, first_name, matches_won, matches_lost, points, rating, number_ratings, fb_id, last_name, c.created_at as created_at FROM ((SELECT id, challengee_id FROM challenges WHERE challenger_id = #{@current_user.id}) AS c INNER JOIN users on users.id = c.challengee_id)"
+    query = "SELECT c.id as challenge_id, c.challengee_id as challengee_id, first_name, matches_won, matches_lost, points, rating, number_ratings, fb_id, last_name FROM ((SELECT id, challengee_id FROM challenges WHERE challenger_id = #{@current_user.id}) AS c INNER JOIN users on users.id = c.challengee_id)"
     results = Challenge.find_by_sql(query)
     render json: {results: results}
   end
