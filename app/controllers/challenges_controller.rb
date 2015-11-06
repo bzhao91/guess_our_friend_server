@@ -15,7 +15,7 @@ class ChallengesController < AuthController
     if Challenge.find_by_challenger_id_and_challengee_id(challengee.id, @current_user.id)
       render json: {errors: "Your opponent has already challenged"}, :status => 804 and return
     end
-    challenge = @current_user.sending_challenges.create(challengee_id: challengee.id)
+    challenge = @current_user.sending_challenges.build(challengee_id: challengee.id)
     if challenge.save
       render json: {message: "Successfully sent out challenge!"}
     else
