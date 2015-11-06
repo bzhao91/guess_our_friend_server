@@ -24,8 +24,45 @@ class ChallengesController < AuthController
     end
   end
   
-  def destroy
-    
+  def challengee_respond
+    #two ways
+    accept = params[:accept]
+    challenger = User.find(params[:challenger_id])
+    unless challenger
+      render json: {errors: "Challenge does not exist"}, :status => 806 and return
+    end
+    challenge = Challenge.find(params[:challenge_id])
+    unless challenge
+      render json: {errors: "Challenge does not exist"}, :status => 806 and return
+    end
+    if challenge.challengee_id.to_i != @current_user.id || challenge.challenger_id.to_i != challenger.id
+      render json: {errors: "Challenge does not exist"}, :status => 806 and return
+    end
+    if accept == true
+      #Game create
+     
+    else
+      #send out decline message
+      
+    end
+    challenge.destroy
+    render json: {message: "Successfully #{accept == true ? 'accepted' : 'rejected'} the challenge"}
+  end
+  
+  def challenger_respond
+    challengee = User.find(params[:challengee_id])
+    unless challengee
+      render json: {errors: "Challenge does not exist"}, :status => 806 and return
+    end
+    challenge = Challenge.find(params[:challenge_id])
+    unless challenge
+      render json: {errors: "Challenge does not exist"}, :status => 806 and return
+    end
+    if challenge.challengee_id.to_i != challengee.id || challenge.challenger_id.to_i != @current_user.id
+      render json: {errors: "Challenge does not exist"}, :status => 806 and return
+    end
+    challenge.destroy
+    render json: {message: "Successfully cancelled the challenge"}
   end
   
   def show_outgoing_challenges
