@@ -27,11 +27,11 @@ class ChallengesController < AuthController
   def challengee_respond
     #two ways
     accept = params[:accept]
-    challenger = User.find(params[:challenger_id])
+    challenger = User.find_by_id(params[:challenger_id])
     unless challenger
       render json: {errors: "Challenge does not exist"}, :status => 806 and return
     end
-    challenge = Challenge.find(params[:challenge_id])
+    challenge = Challenge.find_by_id(params[:challenge_id])
     unless challenge
       render json: {errors: "Challenge does not exist"}, :status => 806 and return
     end
