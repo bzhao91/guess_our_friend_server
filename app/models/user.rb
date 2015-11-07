@@ -11,6 +11,14 @@ class User < ActiveRecord::Base
                                   foreign_key: "challengee_id",
                                   dependent: :destroy                      
   has_many :challenged_bys, through: :receiving_challenges, source: :challengers
+  has_many :accepting_games, class_name: "Game",
+                             foreign_key: "player1id",
+                             dependent: :destroy
+                             
+  has_many :initiating_games, class_name: "Game",
+                              foreign_key: "player2id",
+                              dependent: :destroy
+  
   has_many :friends, class_name:  "Friendship",
                                   foreign_key: "user_id",
                                   dependent: :destroy
