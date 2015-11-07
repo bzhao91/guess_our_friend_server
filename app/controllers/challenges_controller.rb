@@ -40,7 +40,7 @@ class ChallengesController < AuthController
     end
     if accept == true
       #Game create
-      if accept_game == false
+      if accept_game(challenger) == false
         return
       end
     else
@@ -86,7 +86,7 @@ private
       end
     end
     
-    def accept_game
+    def accept_game(challenger)
       if Game.find_by_player1id_and_player2id(challenger.id, @current_user.id) #check if current user has initiated the game before
         render json: {errors: "There is already an ongoing game between you and your friend"}
         return false
