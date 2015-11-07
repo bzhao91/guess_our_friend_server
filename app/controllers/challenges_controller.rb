@@ -35,7 +35,6 @@ class ChallengesController < AuthController
     unless challenge
       render json: {errors: "Challengedf does not exist"}, :status => 806 and return
     end
-    render json: {message: @current_user.id} and return
     if challenge.challengee_id.to_i != @current_user.id || challenge.challenger_id.to_i != challenger.id
       render json: {errors: "Challenge does not exist"}, :status => 806 and return
     end
