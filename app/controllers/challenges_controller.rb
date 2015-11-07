@@ -12,9 +12,9 @@ class ChallengesController < AuthController
       render json: {errors: "Opponent is not your friend"}, :status => 803 and return
     end
       #the person you are challenging has already challenged you
-    # if Challenge.find_by_challenger_id_and_challengee_id(challengee.id, @current_user.id)
-    #   render json: {errors: "Your opponent has already challenged you"}, :status => 804 and return
-    # end
+    if Challenge.find_by_challenger_id_and_challengee_id(challengee.id, @current_user.id)
+      render json: {errors: "Your opponent has already challenged you"}, :status => 804 and return
+    end
     challenge = @current_user.sending_challenges.build(challengee_id: challengee.id)
     #render json: challenge and return 
     if challenge.save
@@ -87,9 +87,12 @@ private
     end
     
     def accept_game
+      if Game.find_by_player1id_and_player2id(challenger.id, @current_user.id) #check if current user has initiated the game before
+        render json: {errors: "There is already an ongoing game between you and your friend"}
+        return false
+      end
       ongoing_game = @current_user.accepting_games(player2id: challenger.id)
-      if ongoing_game.save
-      else
+      unless ongoing_game.save
         render json: {errors: "There is already an ongoing game between you and your friend"}
         return false
       end
