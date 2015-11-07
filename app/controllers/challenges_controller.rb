@@ -91,7 +91,7 @@ private
         render json: {errors: "There is already an ongoing game between you and your friend"}
         return false
       end
-      ongoing_game = @current_user.accepting_games(player2id: challenger.id)
+      ongoing_game = @current_user.accepting_games.build(player2id: challenger.id)
       unless ongoing_game.save
         render json: {errors: "There is already an ongoing game between you and your friend"}
         return false
