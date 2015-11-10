@@ -96,5 +96,6 @@ private
         render json: {errors: "There is already an ongoing game between you and your friend"}
         return false
       end
+      #send out notification's for challenger to prompt him to set a mystery friend
     end
 end
