@@ -4,6 +4,9 @@ class QuestionsController < AuthController
     before_action :login?
     before_action :set_game
     before_action :set_active_user
+    
+    #TODO: need to handle incorrect guess and finish guess function
+    
     def create
         #current user has that game
         if @game.lock == true
