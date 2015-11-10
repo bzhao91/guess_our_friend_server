@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151110004256) do
+ActiveRecord::Schema.define(version: 20151110011038) do
 
   create_table "challenges", force: :cascade do |t|
     t.integer  "challenger_id"
@@ -57,8 +57,8 @@ ActiveRecord::Schema.define(version: 20151110004256) do
     t.boolean  "active_move",     default: true
     t.boolean  "lock",            default: false
     t.boolean  "bad_guess",       default: false
-    t.integer  "mystery_friend1"
-    t.integer  "mystery_friend2"
+    t.integer  "mystery_friend1", default: -1
+    t.integer  "mystery_friend2", default: -1
   end
 
   add_index "games", ["player1id", "player2id"], name: "index_games_on_player1id_and_player2id", unique: true
