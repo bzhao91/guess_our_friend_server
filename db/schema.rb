@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151110022300) do
+ActiveRecord::Schema.define(version: 20151110053557) do
 
   create_table "challenges", force: :cascade do |t|
     t.integer  "challenger_id"
@@ -28,9 +28,9 @@ ActiveRecord::Schema.define(version: 20151110022300) do
   create_table "friend_pools", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "game_id"
-    t.boolean  "grey"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.boolean  "grey",       default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.integer  "friend_id"
   end
 
