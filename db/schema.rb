@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151110011038) do
+ActiveRecord::Schema.define(version: 20151110011922) do
 
   create_table "challenges", force: :cascade do |t|
     t.integer  "challenger_id"
@@ -71,11 +71,11 @@ ActiveRecord::Schema.define(version: 20151110011038) do
     t.integer  "answer",     default: -1
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
-    t.integer  "games_id"
     t.integer  "users_id"
+    t.integer  "game_id"
   end
 
-  add_index "questions", ["games_id"], name: "index_questions_on_games_id"
+  add_index "questions", ["game_id"], name: "index_questions_on_game_id"
   add_index "questions", ["users_id"], name: "index_questions_on_users_id"
 
   create_table "users", force: :cascade do |t|
