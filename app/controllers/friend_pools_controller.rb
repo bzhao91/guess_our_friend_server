@@ -2,7 +2,7 @@ class FriendPoolsController < AuthController
   before_action :login?
   before_action :set_game
   
-  def populate_list
+  def create
     if @current_user.id == @game.player1id && @game.mystery_friend1 != -1
       render json: {errors: "You cannot regenerate a new list since you have chosen the mystery friend"}, :status => 820 and return
     end
