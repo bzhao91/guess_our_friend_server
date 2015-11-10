@@ -1,4 +1,6 @@
 class GamesController < AuthController
+  protect_from_forgery
+  skip_before_action :verify_authenticity_token
   before_action :login?
   before_action :set_game
   
