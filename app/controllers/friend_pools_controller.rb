@@ -11,7 +11,7 @@ class FriendPoolsController < AuthController
     if @current_user.id == @game.player2id && @game.mystery_friend2 != -1
       render json: {errors: "You cannot regenerate a new list since you have chosen the mystery friend"}, :status => 820 and return
     end
-    query = "(SELECT f1.friend_id FROM (SELECT friend_id FROM friendships WHERE user_id = #{@game.player1id}) AS f1 INNER JOIN (SELECT friend_id FROM friendships WHERE user_id = #{@game.player2id}) AS f2 ON f1.friend_id = f2.friend_id)"
+    query = "SELECT * FROM users where id IN (SELECT f1.friend_id FROM (SELECT friend_id FROM friendships WHERE user_id = #{@game.player1id}) AS f1 INNER JOIN (SELECT friend_id FROM friendships WHERE user_id = #{@game.player2id}) AS f2 ON f1.friend_id = f2.friend_id)"
     render json: {message: User.find_by_sql(query)} and return
     mutual_friends = User.find_by_sql(query).to_a
     pool = mutual_friends.sample(25)
