@@ -53,13 +53,13 @@ class GamesController < AuthController
     outgoing_questions = Question.find_by_game_id_and_user_id(@game.id,  @current_user.id)
     incoming_questions = Question.find_by_game_id_and_user_id(@game.id,  @opponent_id)
     #render json: {outgoing_questions: outgoing_questions} and return
-    query_incoming = "SELECT * FROM (SELECT * FROM friend_pools WHERE user_id = #{@opponent_id} AND game_id = #{@game.id}) AS pools INNER JOIN users ON users.id = pools.friend_id"
+    query_incoming = "SELECT users.first_name, users.last_name, pools.grey FROM (SELECT * FROM friend_pools WHERE user_id = #{@opponent_id} AND game_id = #{@game.id}) AS pools INNER JOIN users ON users.id = pools.friend_id"
     incoming_list = User.find_by_sql(query_incoming)
     render json: {list: incoming_list} and return
-    #query_outgoing = "SELECT users.first_name, users.last_name FROM (SELECT * FROM friend_pools WHERE user_id = #{@current_user.id} AND game_id = #{@game.id} AS pools INNER JOIN users ON users.id = pools.friend_id"
-    #outgoing_list = User.find_by_sql(query_outgoing)
-    #mystery_friend_id = @current_user.id == @game.player1id ? @game.mystery_friend1 : @game.mystery_friend2
-    #mystery_friend = User.find_by_id(mystery_friend_id)
+    query_outgoing = "SELECT users.first_name, users.last_name FROM (SELECT * FROM friend_pools WHERE user_id = #{@current_user.id} AND game_id = #{@game.id} AS pools INNER JOIN users ON users.id = pools.friend_id"
+    outgoing_list = User.find_by_sql(query_outgoing)
+    mystery_friend_id = @current_user.id == @game.player1id ? @game.mystery_friend1 : @game.mystery_friend2
+    mystery_friend = User.find_by_id(mystery_friend_id)
     questions = {outgoing_questions: outgoing_questions, incoming_questions: incoming_questions}
     friend_lists = {outgoing_list: outgoing_list, incoming_list: incoming_list}
     render json: {result: {questions: questions, friend_list: friend_lists, mystery_friend: mystery_friend}}
