@@ -20,6 +20,9 @@ Rails.application.routes.draw do
   get 'user/incoming_challenges', to: 'challenges#show_incoming_challenges'
   
   post 'game/set_mystery_friend', to: 'games#set_mystery_friend'
+  
+  get 'game_board', to: 'games#show_game_board'
+  
   resources :users
   #'user/:id' => users#show
   
