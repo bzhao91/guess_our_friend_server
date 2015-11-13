@@ -48,16 +48,15 @@ class GamesController < AuthController
   end
   
   def show_game_board
-    render json: {id: @opponent_id} and return
     #show the question history, outgoing questions, incoming questions
     #show current user's friend pool and people that have been greied out
-    outgoing_questions = Question.find_by_game_id_and_user_id(game_id: @game.id, user_id: @current_user.id)
-    incoming_questions = Question.find_by_game_id_and_user_id(game_id: @game.id, user_id: @opponent_id)
+    outgoing_questions = Question.find_by_game_id_and_user_id(@game.id,  @current_user.id)
+    incoming_questions = Question.find_by_game_id_and_user_id(@game.id,  @opponent_id)
     render json: {outgoing_questions: outgoing_questions} and return
-    #query_incoming = "SELECT users.first_name, users.last_name, pools.grey FROM (SELECT * FROM friend_pools WHERE user_id = #{@opponent_id} AND game_id = #{@game.id}) AS pools INNER JOIN users ON user.id = pools.friend_id"
-    #incoming_list = User.find_by_sql(query_incoming)
-    #query_outgoing = "SELECT users.first_name, users.last_name FROM (SELECT * FROM friend_pools WHERE user_id = #{@current_user.id} AND game_id = #{@game.id} AS pools INNER JOIN users ON user.id = pools.friend_id"
-    #outgoing_list = User.find_by_sql(query_outgoing)
+    query_incoming = "SELECT users.first_name, users.last_name, pools.grey FROM (SELECT * FROM friend_pools WHERE user_id = #{@opponent_id} AND game_id = #{@game.id}) AS pools INNER JOIN users ON user.id = pools.friend_id"
+    incoming_list = User.find_by_sql(query_incoming)
+    query_outgoing = "SELECT users.first_name, users.last_name FROM (SELECT * FROM friend_pools WHERE user_id = #{@current_user.id} AND game_id = #{@game.id} AS pools INNER JOIN users ON user.id = pools.friend_id"
+    outgoing_list = User.find_by_sql(query_outgoing)
     mystery_friend_id = @current_user.id == @game.player1id ? @game.mystery_friend1 : @game.mystery_friend2
     mystery_friend = User.find_by_id(mystery_friend_id)
     questions = {outgoing_questions: outgoing_questions, incoming_questions: incoming_questions}
