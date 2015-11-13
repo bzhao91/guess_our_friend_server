@@ -48,6 +48,7 @@ class GamesController < AuthController
   end
   
   def show_game_board
+    render json: {id: @opponent_id} and return
     #show the question history, outgoing questions, incoming questions
     #show current user's friend pool and people that have been greied out
     outgoing_questions = Question.find_by_game_id_and_user_id(game_id: @game.id, user_id: @current_user.id)
