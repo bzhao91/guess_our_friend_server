@@ -1,4 +1,6 @@
 class BugReportsController < ApplicationController
+  protect_from_forgery
+  skip_before_action :verify_authenticity_token
   def create
     bug_report = BugReport.new(bug_params)
     if bug_report.save
