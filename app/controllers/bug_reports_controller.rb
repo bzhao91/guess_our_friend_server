@@ -4,7 +4,7 @@ class BugReportsController < ApplicationController
     if bug_report.save
       render json: { message: "Thanks for reporting the bug"}
     else
-      render json: { errors: "Unable to report the bug"}, :status => 900
+      render json: { errors: bug_report.errors}, :status => 900
     end
   end
 
