@@ -5,6 +5,7 @@ class UsersController < AuthController
   
   def create
     @user = User.new(user_params)
+    render json: @user.to_json and return
     if @user.save
       token = JWT.encode(@user, Rails.application.secrets.secret_key_base)
       render json: {user: @user, token: token}
