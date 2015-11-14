@@ -50,7 +50,7 @@ GEM
     coffee-script (2.4.1)
       coffee-script-source
       execjs
-    coffee-script-source (1.9.1.1)
+    coffee-script-source (1.10.0)
     columnize (0.9.0)
     debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
@@ -58,10 +58,16 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
     execjs (2.6.0)
+    gcm (0.1.0)
+      httparty
+      json
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
+    httparty (0.13.7)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     i18n (0.7.0)
     jbuilder (2.2.3)
       activesupport (>= 3.0.0, < 5)
@@ -80,6 +86,7 @@ GEM
     mini_portile (0.6.2)
     minitest (5.8.2)
     multi_json (1.11.2)
+    multi_xml (0.5.5)
     netrc (0.11.0)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
@@ -168,6 +175,7 @@ PLATFORMS
 DEPENDENCIES
   byebug (= 3.4.0)
   coffee-rails (= 4.1.0)
+  gcm
   jbuilder (= 2.2.3)
   jquery-rails (= 4.0.3)
   jwt

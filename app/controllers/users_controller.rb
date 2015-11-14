@@ -5,13 +5,31 @@ class UsersController < AuthController
   
   def create
     @user = User.new(user_params)
-    #render json: @user.to_json and return
     if @user.save
       token = JWT.encode(@user, Rails.application.secrets.secret_key_base)
       render json: {user: @user, token: token}
     else
       render json: {errors: @user.errors}
     end
+  end
+  
+  def send_message
+    gcm = GCM.new("AIzaSyBG6sSHwD6XRgKIyN8dNzZa5HVzV1sCBB0")
+    receiver = User.find_by_fb_id(params[:fb_id])
+    gcm_ids = []
+    if receiver.nil? || receiver.gcm_id.blank?
+      render json: {errors: "Invalid receiver"}, :status => 830 and return
+    end
+    gcm_ids << receiver.gcm_id
+    message = "This is a GCM message"
+    options = {
+      data: {
+        title: "Notification",
+        body:  message
+      }
+    }
+    response = gcm.send(gcm_ids, options)
+    render :json => {message: "successfully sent"}
   end
   
   def update_gcm_id

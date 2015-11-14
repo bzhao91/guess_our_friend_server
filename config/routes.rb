@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   get 'friend/new'
   
   get 'user', to: 'users#show'
-  
+  post 'test_gcm', to: 'users#send_message'
   put 'friend_list', to: 'friendships#update_friend_list'
   
   put 'friend_status', to: 'friendships#friend_status'
