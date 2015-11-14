@@ -34,8 +34,7 @@ class UsersController < AuthController
   end
   
   def update_gcm_id
-    @user = User.find_by_fb_id(params[:fb_id])
-    @user.update_attribute(:gcm_id, params[:gcm_id])
+    @current_user.update_attribute(:gcm_id, params[:gcm_id])
     render json: {message: "Successfully updated the gcm id"}
   end
   
