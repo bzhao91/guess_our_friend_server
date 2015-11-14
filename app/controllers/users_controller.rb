@@ -13,6 +13,12 @@ class UsersController < AuthController
     end
   end
   
+  def update_gcm_id
+    @user = User.find_by_fb_id(params[:fb_id])
+    @user.update_attribute(:gcm_id, params[:gcm_id])
+    render json: {message: "Successfully updated the gcm id"}
+  end
+  
   def signup_fb
     
   end
@@ -49,7 +55,7 @@ class UsersController < AuthController
   private
     def user_params
       #needs update
-      params.require(:user).permit(:first_name, :last_name, :fb_id)
+      params.require(:user).permit(:first_name, :last_name, :fb_id, :gcm_id)
     end
     
     def login?

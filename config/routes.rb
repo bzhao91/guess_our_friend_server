@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   
   get 'game_board', to: 'games#show_game_board'
   
+  put 'user/gcm_id', to: 'users#update_gcm_id'
   resources :users
   #'user/:id' => users#show
   
