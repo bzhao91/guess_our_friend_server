@@ -3,14 +3,14 @@ class ChallengesController < AuthController
   skip_before_action :verify_authenticity_token
   before_action :login?
   def create
-    challengee = User.find_by_id(params[:challengee_id])
+    challengee = User.find_by_fb_id(params[:challengee_fb_id])
     unless challengee
       render json: {errors: "Opponent does not exist"}, :status => 802
       return
     end
-    unless Friendship.find_by_user_id_and_friend_id(@current_user.id, challengee.id)
-      render json: {errors: "Opponent is not your friend"}, :status => 803 and return
-    end
+    # unless Friendship.find_by_user_id_and_friend_id(@current_user.id, challengee.id)
+    #   render json: {errors: "Opponent is not your friend"}, :status => 803 and return
+    # end
       #the person you are challenging has already challenged you
     if Challenge.find_by_challenger_id_and_challengee_id(challengee.id, @current_user.id)
       render json: {errors: "Your opponent has already challenged you"}, :status => 804 and return

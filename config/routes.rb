@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   
   get 'user', to: 'users#show'
   post 'test_gcm', to: 'users#send_message'
+  
   put 'friend_list', to: 'friendships#update_friend_list'
   
   put 'friend_status', to: 'friendships#friend_status'
@@ -22,6 +23,8 @@ Rails.application.routes.draw do
   post 'game/set_mystery_friend', to: 'games#set_mystery_friend'
   
   get 'game_board', to: 'games#show_game_board'
+  
+  get 'user/all_games', to: 'games#show_all_games'
   
   put 'user/gcm_id', to: 'users#update_gcm_id'
   resources :users
