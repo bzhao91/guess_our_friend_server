@@ -38,9 +38,6 @@ class UsersController < AuthController
     render json: {message: "Successfully updated the gcm id"}
   end
   
-  def signup_fb
-    
-  end
 
   def update_rating
     #get new rating from front-end
@@ -67,9 +64,9 @@ class UsersController < AuthController
     render json: @current_user.to_json
   end
   
-  def friend_list
-    render json: {friends: @current_user.friends}
-  end
+  # def friend_list
+  #   render json: {friends: @current_user.friends}
+  # end
 
   private
     def user_params

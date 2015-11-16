@@ -8,9 +8,9 @@ Rails.application.routes.draw do
   get 'user', to: 'users#show'
   post 'test_gcm', to: 'users#send_message'
   
-  put 'friend_list', to: 'friendships#update_friend_list'
+  # put 'friend_list', to: 'friendships#update_friend_list'
   
-  put 'friend_status', to: 'friendships#friend_status'
+  # put 'friend_status', to: 'friendships#friend_status'
   
   put 'user/update_rating', to: 'users#update_rating'
   
