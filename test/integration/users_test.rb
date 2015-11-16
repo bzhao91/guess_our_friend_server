@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class UsersSignupTest < ActionDispatch::IntegrationTest
+class UsersTest < ActionDispatch::IntegrationTest
   
   def setup
     post '/users', user: { first_name: "globalUser",
