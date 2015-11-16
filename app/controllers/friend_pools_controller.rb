@@ -55,7 +55,7 @@ class FriendPoolsController < AuthController
         end
       end
     end
-    friend_pool = FriendPool.find_by_game_id_and_user_id(@game.id, @current_user.id)
+    friend_pool = FriendPool.where(game_id: @game.id, user_id: @current_user.id)
     render json: {result: friend_pool}
   end
 
