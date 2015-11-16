@@ -62,7 +62,7 @@ class GamesController < AuthController
     #query_outgoing = "SELECT users.first_name, users.last_name FROM (SELECT * FROM friend_pools WHERE user_id = #{@opponent_id} AND game_id = #{@game.id}) AS pools INNER JOIN users ON users.id = pools.friend_id"
     #outgoing_list = User.find_by_sql(query_outgoing)
     
-    outgoing_list = FriendPool.where(game_id: @game.id, user_id: @opponent_id)
+    outgoing_list = FriendPool.where(game_id: @game.id, user_id: @current_user.id)
     #render json: {list: outgoing_list} and return
     mystery_friend_id = @current_user.id == @game.player1id ? @game.mystery_friend1 : @game.mystery_friend2
     #mystery_friend = User.find_by_id(mystery_friend_id)
