@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151115211956) do
+ActiveRecord::Schema.define(version: 20151116021403) do
 
   create_table "bug_reports", force: :cascade do |t|
     t.string   "title"
@@ -38,7 +38,6 @@ ActiveRecord::Schema.define(version: 20151115211956) do
     t.boolean  "grey",       default: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
-    t.integer  "friend_id"
     t.string   "first_name"
     t.string   "last_name"
   end
