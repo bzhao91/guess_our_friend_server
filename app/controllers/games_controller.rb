@@ -74,7 +74,7 @@ class GamesController < AuthController
   
   def show_all_games
     query = "SELECT * FROM (SELECT id as game_id, player2id FROM games WHERE player1id = #{@current_user.id}) AS g INNER JOIN users on g.player2id = users.id"
-    results = User.find_by_sql(query)    
+    results = User.find_by_sql(query)
     render json: {results: results}
   end
   
