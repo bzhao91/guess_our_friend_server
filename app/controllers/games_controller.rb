@@ -2,7 +2,7 @@ class GamesController < AuthController
   protect_from_forgery
   skip_before_action :verify_authenticity_token
   before_action :login?
-  before_action :set_game
+  before_action :set_game, :except => [:show_all_games]
   
   def set_mystery_friend
     # mystery_friend_id = params[:mystery_friend][:id]
