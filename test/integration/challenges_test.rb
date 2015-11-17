@@ -40,7 +40,28 @@ class ChallengesTest < ActionDispatch::IntegrationTest
   end
 
   test "respond to a challenge as a challenger" do
-    puts create_challenge
-    
+    challenge = create_challenge
+    assert_difference 'Challenge.count', -1 do
+      delete '/challenge/respond_as_challenger', {challengee_id: challenge["challengee_id"], challenge_id: challenge["id"]}, {'HTTP_AUTHORIZATION' => @challenger_token}
+      assert_equal 200, response.status
+    end
+  end
+  
+  test "respond to a challenge as a challengee - decline" do
+    challenge = create_challenge
+    assert_difference 'Challenge.count', -1 do
+      delete '/challenge/respond_as_challengee', {accept: false, challenger_id: challenge["challenger_id"], challenge_id: challenge["id"]}, {'HTTP_CONTENT-TYPE'=> 'application/json', 'HTTP_ACCEPT' => 'application/json','HTTP_AUTHORIZATION' => @challengee_token}
+      assert_equal 200, response.status
+
+    end
+  end
+  test "respond to a challenge as a challengee - accept" do
+    challenge = create_challenge
+    assert_difference 'Challenge.count', -1 do
+      assert_difference 'Game.count', 1 do
+        delete '/challenge/respond_as_challengee', {accept: true, challenger_id: challenge["challenger_id"], challenge_id: challenge["id"]},{'HTTP_CONTENT-TYPE'=> 'application/json', 'HTTP_ACCEPT' => 'application/json', 'HTTP_AUTHORIZATION' => @challengee_token}
+        assert_equal 200, response.status
+      end
+    end
   end
 end

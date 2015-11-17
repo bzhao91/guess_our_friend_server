@@ -31,6 +31,7 @@ class ChallengesController < AuthController
   def challengee_respond
     #two ways
     accept = params[:accept]
+
     challenger = User.find_by_id(params[:challenger_id])
     unless challenger
       render json: {errors: "Challenger does not exist"}, :status => 806 and return
@@ -42,7 +43,8 @@ class ChallengesController < AuthController
     if challenge.challengee_id.to_i != @current_user.id || challenge.challenger_id.to_i != challenger.id
       render json: {errors: "Challenge does not exist"}, :status => 806 and return
     end
-    if accept == true
+   
+    if accept == true || accept == 'true'
       #Game create
       if accept_game(challenger) == false
         return
@@ -51,8 +53,9 @@ class ChallengesController < AuthController
       #send out decline message
       
     end
+    
     challenge.destroy
-    render json: {message: "Successfully #{accept == true ? 'accepted' : 'rejected'} the challenge"}
+    render json: {message: "Successfully #{accept == true || accept == 'true' ? 'accepted' : 'rejected'} the challenge"}
   end
   
   def challenger_respond
