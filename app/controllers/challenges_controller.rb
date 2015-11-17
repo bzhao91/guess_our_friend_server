@@ -8,6 +8,10 @@ class ChallengesController < AuthController
       render json: {errors: "Opponent does not exist"}, :status => 802
       return
     end
+    
+    if challengee.id == @current_user.id
+      render json: {errors: "You cannot challenge yourself"}, :status => 803 and return
+    end
     # unless Friendship.find_by_user_id_and_friend_id(@current_user.id, challengee.id)
     #   render json: {errors: "Opponent is not your friend"}, :status => 803 and return
     # end
@@ -18,7 +22,7 @@ class ChallengesController < AuthController
     challenge = @current_user.sending_challenges.build(challengee_id: challengee.id)
     #render json: challenge and return 
     if challenge.save
-      render json: {message: "Successfully sent out challenge!"}
+      render json: challenge.to_json
     else
       render json: {errors: "There is already an pending challenge between you and your friend"}, :status => 805
     end

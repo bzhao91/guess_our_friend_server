@@ -14,7 +14,7 @@ class UsersTest < ActionDispatch::IntegrationTest
   end
   
   def login(token)
-    get '/user', nil, {'HTTP_AUTHORIZATION' => @token}
+    get '/user', nil, {'HTTP_AUTHORIZATION' => token}
     assert_equal 200, response.status
     logged_in_user = JSON.parse(response.body)
     return logged_in_user
@@ -52,7 +52,7 @@ class UsersTest < ActionDispatch::IntegrationTest
     end
   end
   
-  test "update gcm" do
+  test "update gcm_id" do
     original_gcm_id = login(@token)["gcm_id"]
     
     put '/user/gcm_id', {gcm_id: "#{original_gcm_id}new gcm id"}, {'HTTP_AUTHORIZATION' => @token}
