@@ -69,7 +69,7 @@ class GamesController < AuthController
     mystery_friend = FriendPool.find_by_id(mystery_friend_id)
     questions = {outgoing_questions: outgoing_questions, incoming_questions: incoming_questions}
     friend_lists = {outgoing_list: outgoing_list, incoming_list: incoming_list}
-    render json: {result: {questions: questions, friend_list: friend_lists, mystery_friend: mystery_friend}}
+    render json: {results: {questions: questions, friend_list: friend_lists, mystery_friend: mystery_friend}}
   end
   
   def show_all_games

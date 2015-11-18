@@ -5,6 +5,7 @@ class QuestionsController < AuthController
     before_action :set_game
     before_action :set_active_user
     
+    #TODO: STILL HAS A LOT TO DO TO CLEAN THE MESS 
     #TODO: need to handle incorrect guess and finish guess function
     
     def create
@@ -60,7 +61,7 @@ class QuestionsController < AuthController
         #take the guess, check if it's correct answer
         
         @game.update_attribute(:locked, false)
-    end
+    end  
     
     
 private   

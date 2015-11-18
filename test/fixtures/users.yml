@@ -5,3 +5,9 @@ test1:
   last_name: user
   fb_id: testuser
   
+
+test2:
+  first_name: test2
+  last_name: user
+  fb_id: test2user
+  

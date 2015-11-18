@@ -28,7 +28,7 @@ class FriendPoolsController < AuthController
     end
     ms = false
     pool.each do |f|
-      if f[:mystery_friend] == true
+      if f[:mystery_friend] == true || f[:mystery_friend] == "true"
         ms = true
         break
       end
@@ -46,17 +46,17 @@ class FriendPoolsController < AuthController
         game_id: @game.id
         )
       if @cur_as_p1 == true
-        if f[:mystery_friend] == true && @game.mystery_friend1 == -1
+        if (f[:mystery_friend] == true || f[:mystery_friend] == 'true') && @game.mystery_friend1 == -1
           @game.update_attribute(:mystery_friend1, tf.id)
         end
       else
-        if f[:mystery_friend] == true && @game.mystery_friend2 == -1
+        if (f[:mystery_friend] == true || f[:mystery_friend] == 'true') && @game.mystery_friend2 == -1
           @game.update_attribute(:mystery_friend2, tf.id)
         end
       end
     end
     friend_pool = FriendPool.where(game_id: @game.id, user_id: @current_user.id)
-    render json: {result: friend_pool}
+    render json: {result: friend_pool, game: @game}
   end
 
 private

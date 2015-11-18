@@ -43,10 +43,10 @@ class ChallengesController < AuthController
     if challenge.challengee_id.to_i != @current_user.id || challenge.challenger_id.to_i != challenger.id
       render json: {errors: "Challenge does not exist"}, :status => 806 and return
     end
-   
+    ongoing_game = nil
     if accept == true || accept == 'true'
       #Game create
-      if accept_game(challenger) == false
+      if (ongoing_game = accept_game(challenger)) == false
         return
       end
     else
@@ -55,7 +55,11 @@ class ChallengesController < AuthController
     end
     
     challenge.destroy
-    render json: {message: "Successfully #{accept == true || accept == 'true' ? 'accepted' : 'rejected'} the challenge"}
+    if accept == true || accept == 'true'
+      render json: ongoing_game.to_json
+    else
+      render json: {message: "Successfully rejected the challenge"}
+    end
   end
   
   def challenger_respond
@@ -103,6 +107,7 @@ private
         render json: {errors: "There is already an ongoing game between you and your friend"}
         return false
       end
+      return ongoing_game
       #send out notification's for challenger to prompt him to set a mystery friend
     end
 end
