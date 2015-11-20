@@ -9,28 +9,32 @@ class QuestionsController < AuthController
     #TODO: need to handle incorrect guess and finish guess function
     
     def create
-        #current user has that game
-        if @game.lock == true
-            if @active_user_id == @current_user.id
-                render json: { errors: "You need to answer your opponent's question before proceeding"} and return
-            else
-                render json: { errors: "Please wait for your previous question to be answered"} and return
-            end
-        end
-        if @active_user_id != @current_user.id
-            render json: {errors: "Invalid operation"}, :status => 811 and return
-        end
         if params[:content].blank?
             render json: {errors: "Invalid question"}, :status => 812 and return
         end
-        question = Question.new(
+        if @game.lock == false && @game.questions_left > 0 && @active_user_id == @current_user.id
+            question = Question.new(
             content: params[:content],
             user_id: @current_user.id,
             game_id: @game.id
         )
-        question.save
-        @game.update_attribute(:active_move, !game.active_move)
-        render json: {message: "Successfully sent the question"}
+            question.save
+            #send out the question to the opponent including id
+            @game.update_attribute(:lock, true) #lock the game
+            render json: {message: "Successfully sent the question"} and return
+        end
+        
+        if @active_user_id != @current_user.id
+            render json: { errors: "You need to answer your opponent's question before proceeding"}, :status => 851 and return
+        end
+        
+        if @game.lock == true
+            render json: { errors: "Please wait for your previous question to be answered"}, :status => 852 and return
+        end
+        
+        if @game.questions_left == 0
+            render json: { errors: "You do not have any questions left"}, :status => 853 and return
+        end
     end
     
     def answer
@@ -42,25 +46,74 @@ class QuestionsController < AuthController
         if questions.game_id != @game.id
             render json: {errors: "Invalid game"}, :status => 811 and return
         end
+         
+        if @game.lock == false
+            if @current_user == @active_user_id
+                render json: {errors: "Please ask a question and wait for your opponent to answer"}, :status => 813 and return
+            else
+                render json: {errors: "Please wait for your opponent to ask a question first"}, :status => 813
+            end
+        end
+        
         if question.user_id == @current_user.id
             render json: {errors: "You can not answer your own question"}, :status => 812 and return
         end
+        
+        @game.update_attribute(:questions_left, @game.questions_left-1)
+        @game.update_attribute(:lock, false)
         question.update_attribute(:answer, a)
-       
         #send answer to opponent
         render json: {message: "Successfully answered the question"}
     end
     
     def guess
-        if @current_user.id == @active_user_id
-            render json: { errors: "Please ask a question before take a guess"}, :status => 813 and return
+        if @game.lock == true
+            if @current_user.id == @active_user_id
+                render json: {errors: "Please wait for your question to be answered"}, :status => 814 and return
+            else
+                render json: {errors: "Invalid move, please answer the pending question"}, :status => 815 and return
+            end
         end
-        if @game.locked == false
-            render json: { errors: "You have missed your opportunity to take the guess"}, :status => 814 and return
+        #game is unlocked
+          
+        if @current_user.id != @active_user_id
+            render json: { errors: "Invalid move, please wait until your turn"}, :status => 814 and return
         end
-        #take the guess, check if it's correct answer
         
-        @game.update_attribute(:locked, false)
+        if @game.questions_left > 0
+            render json: {errors: "Please answer your remaianing questions before taking a guess"}, :status => 816 and return
+        end
+        
+        if params[:guess_id] == -1
+            @game.update_attribute(:questions_left, 1)
+            @game.update_attribute(:active_move, !@game.active_move)
+            render json: {message: "Player has given up the guess opportunity"} and return
+        end
+      
+        #take the guess, check if it's correct answer
+        opponent_mystery_id = @current_user.id == @game.player1id ? @game.mystery_friend2 : mystery_friend1
+        guess_friend = FriendPool.find_by_id(params[:guess_id])
+        
+        if guess_friend.blank?
+            render json: {errors: "Invalid guess"}, :status => 815 and return
+        end
+        
+        if guess_friend.game_id != @game.id || guess_friend.user_id != @active_user_id
+            render json: {errors: "Invalid guess"}, :status => 815 and return
+        end
+        
+        if params[:guess_id] == opponent_mystery_id
+            #win the game
+            #update the stats
+            #send failure message to the opponent
+            render json: {message: "You have won the game"} and return
+        else
+            #the other person gets two chances
+            @game.update_attribute(:questions_left, 2)
+            @game.update_attribute(:active_move, !@game.active_move)
+            #send the reward message to the opponent
+            render json: {message: "You guess is wrong. Your opponent will be rewarded with two questions"}
+        end
     end  
     
     

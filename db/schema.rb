@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151116021403) do
+ActiveRecord::Schema.define(version: 20151120203250) do
 
   create_table "bug_reports", force: :cascade do |t|
     t.string   "title"
@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(version: 20151116021403) do
     t.datetime "updated_at",                      null: false
     t.boolean  "active_move",     default: true
     t.boolean  "lock",            default: false
-    t.boolean  "bad_guess",       default: false
+    t.integer  "questions_left",  default: 1
     t.integer  "mystery_friend1", default: -1
     t.integer  "mystery_friend2", default: -1
   end
