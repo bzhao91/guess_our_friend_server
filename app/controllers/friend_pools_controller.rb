@@ -56,6 +56,11 @@ class FriendPoolsController < AuthController
       end
     end
     friend_pool = FriendPool.where(game_id: @game.id, user_id: @current_user.id)
+    friends = []
+    friend_pool.each do |f|
+      friends << JSON.parse(f.to_json(:except => [:created_at, :updated_at, :user_id, :game_id, :grey]))
+    end
+    send_gcm_message(@opponent.gcm_id, "Guess the Mystery Friend!", {pool: friends, game: @game.id}.to_json)
     render json: {result: friend_pool, game: @game}
   end
 
@@ -75,5 +80,23 @@ private
         render json: {errors: "Invalid game"}, :status => 811 and return
     end
     @cur_as_p1 = @current_user.id == @game.player1id ? true : false
+    @opponent  = @current_user.id == @game.player1id ? User.find_by_id(@game.player2id) : User.find_by_id(@game.player1id)
+    if @opponent.blank?
+        render json: {errors: "Invalid game, opponent does not exist"} and return
+    end
+  end
+  
+  def send_gcm_message(gcm_id, title, content)
+      gcm = GCM.new("AIzaSyBG6sSHwD6XRgKIyN8dNzZa5HVzV1sCBB0")
+      gcm_ids = []
+      gcm_ids << gcm_id
+      message = content
+      options = {
+        data: {
+          title: title,
+          body:  message
+        }
+      }
+      response = gcm.send(gcm_ids, options)
   end
 end

@@ -22,6 +22,8 @@ class ChallengesController < AuthController
     challenge = @current_user.sending_challenges.build(challengee_id: challengee.id)
     #render json: challenge and return 
     if challenge.save
+      content = challenge.to_json
+      send_gcm_message(challengee.gcm_id, "Your Friend #{@current_user.first_name} has challenged you", content)
       render json: challenge.to_json
     else
       render json: {errors: "There is already an pending challenge between you and your friend"}, :status => 805
@@ -49,11 +51,11 @@ class ChallengesController < AuthController
       if (ongoing_game = accept_game(challenger)) == false
         return
       end
+      send_gcm_message(challenger.gcm_id, "Your friend #{@current_user.first_name} has accepted your challenge", ongoing_game.to_json)
     else
       #send out decline message
-      
+      send_gcm_message(challenger.gcm_id, "Your friend #{@current_user.first_name} has rejected your challenge", "")
     end
-    
     challenge.destroy
     if accept == true || accept == 'true'
       render json: ongoing_game.to_json
@@ -75,6 +77,7 @@ class ChallengesController < AuthController
       render json: {errors: "Challenge does not exist"}, :status => 806 and return
     end
     challenge.destroy
+    send_gcm_message(challengee.gcm_id, "Your friend #{@current_user.first_name} has cancelled the challenge", "")
     render json: {message: "Successfully cancelled the challenge"}
   end
   
@@ -109,5 +112,20 @@ private
       end
       return ongoing_game
       #send out notification's for challenger to prompt him to set a mystery friend
+    end
+    
+    def send_gcm_message(gcm_id, title, content)
+      gcm = GCM.new("AIzaSyBG6sSHwD6XRgKIyN8dNzZa5HVzV1sCBB0")
+      gcm_ids = []
+      gcm_ids << gcm_id
+      message = content
+      options = {
+        data: {
+          title: title,
+          body:  message
+        }
+      }
+      response = gcm.send(gcm_ids, options)
+  
     end
 end

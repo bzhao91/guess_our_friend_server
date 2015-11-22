@@ -21,6 +21,7 @@ class QuestionsController < AuthController
             question.save
             #send out the question to the opponent including id
             @game.update_attribute(:lock, true) #lock the game
+            send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name}'s Asked", params[:content])
             render json: {message: "Successfully sent the question"} and return
         end
         
@@ -62,6 +63,7 @@ class QuestionsController < AuthController
         @game.update_attribute(:questions_left, @game.questions_left-1)
         @game.update_attribute(:lock, false)
         question.update_attribute(:answer, a)
+        send_gcm_message(@opponent.gcm_id, "#{@current_user.first} Answered", question.to_json)
         #send answer to opponent
         render json: {message: "Successfully answered the question"}
     end
@@ -81,7 +83,7 @@ class QuestionsController < AuthController
         end
         
         if @game.questions_left > 0
-            render json: {errors: "Please answer your remaianing questions before taking a guess"}, :status => 816 and return
+            render json: {errors: "Please answer your remaining questions before taking a guess"}, :status => 816 and return
         end
         
         if params[:guess_id] == -1
@@ -103,6 +105,8 @@ class QuestionsController < AuthController
         end
         
         if params[:guess_id] == opponent_mystery_id
+            
+            send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name} Made the Guess!", "#{@current_user.first_name} guessed #{guess_friend.first_name} #{guess_friend.last_name}, #{@current_user.first_name} wins!")
             #win the game
             #update the stats
             #send failure message to the opponent
@@ -112,7 +116,8 @@ class QuestionsController < AuthController
             @game.update_attribute(:questions_left, 2)
             @game.update_attribute(:active_move, !@game.active_move)
             #send the reward message to the opponent
-            render json: {message: "You guess is wrong. Your opponent will be rewarded with two questions"}
+            send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name} Made the Guess!", "#{@current_user.first_name} guessed #{guess_friend.first_name} #{guess_friend.last_name} #{@current_user.first_name} guessed incorrectly, you are rewarded with an extra question!")
+            render json: {message: "Your guess is wrong. Your opponent will be rewarded with two questions"}
         end
     end  
     
@@ -136,5 +141,24 @@ private
         if @current_user.id != @game.player1id && @current_user.id != @game.player2id
             render json: {errors: "Invalid game"}, :status => 811 and return
         end
+        @opponent  = @current_user.id == @game.player1id ? User.find_by_id(@game.player2id) : User.find_by_id(@game.player1id)
+        if @opponent.blank?
+            render json: {errors: "Invalid game, opponent does not exist"} and return
+        end
+    end
+    
+    def send_gcm_message(gcm_id, title, content)
+      gcm = GCM.new("AIzaSyBG6sSHwD6XRgKIyN8dNzZa5HVzV1sCBB0")
+      gcm_ids = []
+      gcm_ids << gcm_id
+      message = content
+      options = {
+        data: {
+          title: title,
+          body:  message
+        }
+      }
+      response = gcm.send(gcm_ids, options)
+     
     end
 end
