@@ -132,7 +132,7 @@ private
     end
     
     def set_active_user
-        @active_user_id = game.active_move == true ? @game.player1id : @game.player2id
+        @active_user_id = @game.active_move == true ? @game.player1id : @game.player2id
     end
     
     def set_game
