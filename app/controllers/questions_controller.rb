@@ -136,7 +136,7 @@ private
     end
     
     def set_game
-        render json: {result: params[:game_id]} and return
+       
         @game = Game.find_by_id(params[:game_id])
         unless @game
             render json: {errors: "Game does not exist"}, :status => 810 and return
@@ -144,7 +144,8 @@ private
         if @current_user.id != @game.player1id && @current_user.id != @game.player2id
             render json: {errors: "Invalid game"}, :status => 811 and return
         end
-        @opponent  = @current_user.id == @game.player1id ? User.find_by_id(@game.player2id) : User.find_by_id(@game.player1id)
+        @opponent = @current_user.id == @game.player1id ? User.find_by_id(@game.player2id) : User.find_by_id(@game.player1id)
+         render json: {result: @opponent} and return
         if @opponent.blank?
             render json: {errors: "Invalid game, opponent does not exist"} and return
         end
