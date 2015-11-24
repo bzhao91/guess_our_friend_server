@@ -12,7 +12,7 @@ class QuestionsController < AuthController
         if params[:content].blank?
             render json: {errors: "Invalid question"}, :status => 812 and return
         end
-       
+        render text: "hello" and return
         if @game.lock == false && @game.questions_left > 0 && @active_user_id == @current_user.id
             question = Question.new(
             content: params[:content],
