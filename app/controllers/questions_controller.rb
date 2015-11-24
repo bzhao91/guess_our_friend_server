@@ -19,7 +19,7 @@ class QuestionsController < AuthController
             user_id: @current_user.id,
             game_id: @game.id
         )
-
+            render json: question.to_json and return
             question.save
             #send out the question to the opponent including id
             @game.update_attribute(:lock, true) #lock the game
