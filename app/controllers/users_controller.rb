@@ -68,6 +68,12 @@ class UsersController < AuthController
   #   render json: {friends: @current_user.friends}
   # end
 
+  def destroy
+    @user = User.find_by_fb_id(params[:fb_id])
+    @user.destroy
+    render json: {message: "Successfully deleted user"}
+  end
+  
   private
     def user_params
       #needs update
