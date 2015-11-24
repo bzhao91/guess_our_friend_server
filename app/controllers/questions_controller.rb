@@ -12,14 +12,14 @@ class QuestionsController < AuthController
         if params[:content].blank?
             render json: {errors: "Invalid question"}, :status => 812 and return
         end
-        render text: "hello" and return
+       
         if @game.lock == false && @game.questions_left > 0 && @active_user_id == @current_user.id
             question = Question.new(
             content: params[:content],
             user_id: @current_user.id,
             game_id: @game.id
         )
-            render json: @game and return
+
             question.save
             #send out the question to the opponent including id
             @game.update_attribute(:lock, true) #lock the game
@@ -132,7 +132,7 @@ private
     end
     
     def set_active_user
-        @active_user_id = game.active_move == true ? player1id : player2id
+        @active_user_id = game.active_move == true ? @game.player1id : @game.player2id
     end
     
     def set_game
@@ -145,7 +145,7 @@ private
             render json: {errors: "Invalid game"}, :status => 811 and return
         end
         @opponent = @current_user.id == @game.player1id ? User.find_by_id(@game.player2id) : User.find_by_id(@game.player1id)
-         render json: {result: @opponent} and return
+      
         if @opponent.blank?
             render json: {errors: "Invalid game, opponent does not exist"} and return
         end
