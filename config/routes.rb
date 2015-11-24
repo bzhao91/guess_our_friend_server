@@ -27,6 +27,8 @@ Rails.application.routes.draw do
   get 'user/all_games', to: 'games#show_all_games'
   
   put 'user/gcm_id', to: 'users#update_gcm_id'
+  
+  delete 'user', to: 'users#destroy'
   resources :users
   #'user/:id' => users#show
   
