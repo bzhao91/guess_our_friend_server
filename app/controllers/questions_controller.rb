@@ -12,14 +12,14 @@ class QuestionsController < AuthController
         if params[:content].blank?
             render json: {errors: "Invalid question"}, :status => 812 and return
         end
-        render text: "hello" and return
+        
         if @game.lock == false && @game.questions_left > 0 && @active_user_id == @current_user.id
             question = Question.new(
             content: params[:content],
             user_id: @current_user.id,
             game_id: @game.id
         )
-            render json: question.to_json and return
+           
             question.save
             #send out the question to the opponent including id
             @game.update_attribute(:lock, true) #lock the game
