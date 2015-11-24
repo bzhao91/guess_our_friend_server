@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   
   resources :bug_reports
   
-  resources :question
+  resources :questions
   post 'question/answer', to: 'questions#answer'
   post 'game/guess', to: 'questions#guess'
   delete 'challenge/respond_as_challengee', to: 'challenges#challengee_respond'
