@@ -136,6 +136,7 @@ private
     end
     
     def set_game
+        render json: {result: params[:game_id]} and return
         @game = Game.find_by_id(params[:game_id])
         unless @game
             render json: {errors: "Game does not exist"}, :status => 810 and return
