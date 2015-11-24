@@ -22,8 +22,9 @@ class ChallengesController < AuthController
     challenge = @current_user.sending_challenges.build(challengee_id: challengee.id)
     #render json: challenge and return 
     if challenge.save
-      content = challenge.to_json
-      send_gcm_message(challengee.gcm_id, "Your Friend #{@current_user.first_name} has challenged you", content)
+      content_hash = Hash.new
+      content_hash['challenger_fb_id'] = User.find_by_id(challenge.challenger_id).fb_id
+      send_gcm_message(challengee.gcm_id, "Your Friend #{@current_user.first_name} has challenged you", content_hash.to_json)
       render json: challenge.to_json
     else
       render json: {errors: "There is already an pending challenge between you and your friend"}, :status => 805
