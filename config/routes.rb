@@ -37,6 +37,10 @@ Rails.application.routes.draw do
   resources :friend_pools
   
   resources :bug_reports
+  
+  resources :question
+  post 'question/answer', to: 'questions#answer'
+  post 'game/guess', to: 'questions#guess'
   delete 'challenge/respond_as_challengee', to: 'challenges#challengee_respond'
   delete 'challenge/respond_as_challenger', to: 'challenges#challenger_respond'
   #get '/users/nickname', to: 'users#get_nickname'
