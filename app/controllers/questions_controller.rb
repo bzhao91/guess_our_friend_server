@@ -46,14 +46,14 @@ class QuestionsController < AuthController
             render json: {errors: "Invalid answer"}
         end
         question = Question.find_by_id(params[:question_id])
-        if questions.game_id != @game.id
+        if question.game_id != @game.id
             render json: {errors: "Invalid game"}, :status => 811 and return
         end
          
         if @game.lock == false
             if @current_user == @active_user_id
                 render json: {errors: "Please ask a question and wait for your opponent to answer"}, :status => 813 and return
-            else
+             else
                 render json: {errors: "Please wait for your opponent to ask a question first"}, :status => 813
             end
         end
