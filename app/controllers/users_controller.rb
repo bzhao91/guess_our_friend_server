@@ -12,7 +12,8 @@ class UsersController < AuthController
     else
       #render json: { errors: @user.errors }
       #temporary stuff
-      token = JWT.encode(@user, Rails.application.secrets.secret_key_base)
+      user = User.find_by_fb_id(params[:user][:fb_id])
+      token = JWT.encode(user, Rails.application.secrets.secret_key_base)
       render json: {token: token }
     end
   end
@@ -92,6 +93,5 @@ class UsersController < AuthController
     def get_fb_user(access_token)
       RestClient.get 'https://graph.facebook.com//v2.3/me', :params => { :access_token => access_token}
     end
-    
-    
+
 end
