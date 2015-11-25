@@ -65,7 +65,7 @@ class QuestionsController < AuthController
         @game.update_attribute(:questions_left, @game.questions_left-1)
         @game.update_attribute(:lock, false)
         question.update_attribute(:answer, a)
-        send_gcm_message(@opponent.gcm_id, "#{@current_user.first} Answered", question.to_json)
+        send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name} Answered", question.to_json)
         #send answer to opponent
         render json: {message: "Successfully answered the question"}
     end
