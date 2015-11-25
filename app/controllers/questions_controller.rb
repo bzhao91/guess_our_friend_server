@@ -23,7 +23,7 @@ class QuestionsController < AuthController
             question.save
             #send out the question to the opponent including id
             @game.update_attribute(:lock, true) #lock the game
-            send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name}'s Asked", params[:content])
+            send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name}'s Asked", question.to_json(:except=>[:created_at, :updated_at]))
             render json: {message: "Successfully sent the question"} and return
         end
         
