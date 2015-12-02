@@ -8,7 +8,7 @@ class GamesController < AuthController
     friends_ids = params[:friends]
     friends = []
     unless friends_ids.present?
-      render json: {errors: "Invalid parameter in match making"}, :status => 888
+      render json: {errors: "Invalid parameter in matchmaking"}, :status => 888
       return
     end
     friends_ids.each do |id|
@@ -29,12 +29,12 @@ class GamesController < AuthController
       end
     end
     @current_user.update_attribute(:match_making, Time.now)
-    render json: {message: "There are no available friends in the match making pool. You have been placed in the pool"}
+    render json: {message: "There are no available friends in the matchmaking pool. You have been placed in the pool."}
   end
   
   def remove_from_match_making
     @current_user.update_attribute(:match_making, nil)
-    render json: {message: "Successfully removed yourself from the match making pool"}
+    render json: {message: "Successfully removed yourself from the matchmaking pool."}
   end
   
   def show_game_board
