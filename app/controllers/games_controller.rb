@@ -8,7 +8,7 @@ class GamesController < AuthController
     friends_ids = params[:friends]
     friends = []
     unless friends_ids.present?
-      render json: {errors: "Invalid parameter in matchmaking"}, :status => 888
+      render json: {errors: "Invalid parameter in matchmaking."}, :status => 888
       return
     end
     friends_ids.each do |id|
@@ -25,7 +25,7 @@ class GamesController < AuthController
         g = Game.create(player1id: friends.first.id, player2id: @current_user.id)
         send_gcm_message(friends.first.gcm_id, "Your friend #{@current_user.first_name} started a game with you!", g.to_json)
         User.find_by_id(friends.first.id).update_attribute(:match_making, nil)
-        render json: {results: g} and return
+        render json: {game: g} and return
       end
     end
     @current_user.update_attribute(:match_making, Time.now)
