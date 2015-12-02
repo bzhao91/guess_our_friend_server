@@ -23,12 +23,18 @@ class GamesController < AuthController
         friends.delete_at(0)
       else
         g = Game.create(player1id: friends.first.id, player2id: @current_user.id)
+        send_gcm_message(friends.first.gcm_id, "Your friend #{@current_user.first_name} started a game with you!", g.to_json)
         User.find_by_id(friends.first.id).update_attribute(:match_making, nil)
         render json: {results: g} and return
       end
     end
     @current_user.update_attribute(:match_making, Time.now)
     render json: {errors: "There are no available friends in the match making pool. You have been placed in the pool"}
+  end
+  
+  def remove_from_match_making
+    @current_user.update_attribute(:match_making, nil)
+    render json: {message: "Successfully removed yourself from the match making pool"}
   end
   
   def show_game_board
@@ -81,4 +87,19 @@ private
     end
     @opponent_id = @current_user.id == @game.player1id ? @game.player2id : @game.player1id
   end
+  
+     def send_gcm_message(gcm_id, title, content)
+      gcm = GCM.new("AIzaSyBG6sSHwD6XRgKIyN8dNzZa5HVzV1sCBB0")
+      gcm_ids = []
+      gcm_ids << gcm_id
+      message = content
+      options = {
+        data: {
+          title: title,
+          body:  message
+        }
+      }
+      response = gcm.send(gcm_ids, options)
+  
+    end
 end

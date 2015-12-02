@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   
   post 'game/match_making', to: 'games#match_making'
   
+  put 'game/remove_from_match_making', to: 'games#remove_from_match_making'
   
   put 'user/gcm_id', to: 'users#update_gcm_id'
   
