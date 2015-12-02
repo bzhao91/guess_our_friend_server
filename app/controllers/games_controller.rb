@@ -25,7 +25,7 @@ class GamesController < AuthController
         g = Game.create(player1id: friends.first.id, player2id: @current_user.id)
         send_gcm_message(friends.first.gcm_id, "Your friend #{@current_user.first_name} started a game with you!", g.to_json)
         User.find_by_id(friends.first.id).update_attribute(:match_making, nil)
-        render json: {game: g} and return
+        render json: {game: g, message: "Successfully found a friend."} and return
       end
     end
     @current_user.update_attribute(:match_making, Time.now)
