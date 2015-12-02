@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151120203250) do
+ActiveRecord::Schema.define(version: 20151202033055) do
 
   create_table "bug_reports", force: :cascade do |t|
     t.string   "title"
@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(version: 20151120203250) do
     t.string   "fb_id"
     t.string   "last_name"
     t.string   "gcm_id"
+    t.datetime "match_making"
   end
 
   add_index "users", ["fb_id"], name: "index_users_on_fb_id", unique: true

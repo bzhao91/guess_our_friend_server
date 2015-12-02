@@ -2,51 +2,33 @@ class GamesController < AuthController
   protect_from_forgery
   skip_before_action :verify_authenticity_token
   before_action :login?
-  before_action :set_game, :except => [:show_all_games]
+  before_action :set_game, :except => [:show_all_games, :match_making]
   
-  def set_mystery_friend
-    # mystery_friend_id = params[:mystery_friend][:id]
-    # pool = params[:pool]
-    # valid_mystery_friend = false
-    # pool.each do |f|
-    #   if f[:id] == mystery_friend_id
-    #     valid_mystery_friend = true
-    #     break
-    #   end
-    # end
-    # if valid_mystery_friend == false
-    #   render json: {errors: "Invalid mystery friend"}, :status => 822 and return
-    # end
-    
-    # if @current_user.id == @game.player1id
-    #   if @game.mystery_friend1 != -1
-    #     render json: {errors: "You cannot change your mystery friend selection"}, :status => 821 and return
-    #   end
-    #   pool.each do |f|
-    #     FriendPool.create(
-    #       friend_id: f[:id],
-    #       user_id: @current_user.id,
-    #       game_id: @game.id
-    #       )
-    #   end
-    #   @game.update_attribute(:mystery_friend1, mystery_friend_id)
-    # end
-    # if @current_user.id == @game.player2id
-    #   if @game.mystery_friend2 != -1
-    #     render json: {errors: "You cannot change your mystery friend selection"}, :status => 821 and return
-    #   end
-    #   pool.each do |f|
-    #     FriendPool.create(
-    #       friend_id: f[:id],
-    #       user_id: @current_user.id,
-    #       game_id: @game.id
-    #       )
-    #   end
-    #   @game.update_attribute(:mystery_friend2, mystery_friend_id)
-    # end
-    
-    
-    #render json: {message: "Successfully commited friend pool and set mystery friend"}
+  def match_making
+    friends_ids = params[:friends]
+    friends = []
+    unless friends_ids.present?
+      render json: {errors: "Invalid parameter in match making"}, :status => 888
+      return
+    end
+    friends_ids.each do |id|
+      f = User.find_by_fb_id(id)
+      if f.present? && f.match_making.nil? == false
+        friends << f
+      end
+    end
+    while friends.count > 0
+      friends.sort_by{|x| x.match_making}
+      if Game.where(player1id: @current_user.id, player2id: friends.first.id).present? || Game.where(player1id: friends.first.id, player2id: @current_user.id).present?
+        friends.delete_at(0)
+      else
+        g = Game.create(player1id: friends.first.id, player2id: @current_user.id)
+        User.find_by_id(friends.first.id).update_attribute(:match_making, nil)
+        render json: {results: g} and return
+      end
+    end
+    @current_user.update_attribute(:match_making, Time.now)
+    render json: {errors: "There are no available friends in the match making pool"}, :status => 999
   end
   
   def show_game_board

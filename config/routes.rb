@@ -26,6 +26,9 @@ Rails.application.routes.draw do
   
   get 'user/all_games', to: 'games#show_all_games'
   
+  post 'game/match_making', to: 'games#match_making'
+  
+  
   put 'user/gcm_id', to: 'users#update_gcm_id'
   
   delete 'user', to: 'users#destroy'
