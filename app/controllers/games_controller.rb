@@ -29,7 +29,7 @@ class GamesController < AuthController
       end
     end
     @current_user.update_attribute(:match_making, Time.now)
-    render json: {errors: "There are no available friends in the match making pool. You have been placed in the pool"}
+    render json: {message: "There are no available friends in the match making pool. You have been placed in the pool"}
   end
   
   def remove_from_match_making
