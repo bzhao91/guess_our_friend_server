@@ -78,15 +78,12 @@ class ChallengesController < AuthController
   end
   
   def challenger_respond
-    challengee = User.find_by_id(params[:challengee_id])
+    challengee = User.find_by_fb_id(params[:challengee_fb_id])
     unless challengee
       render json: {errors: "Challenge does not exist"}, :status => 806 and return
     end
-    challenge = Challenge.find_by_id(params[:challenge_id])
+    challenge = Challenge.find_by_challenger_id_and_challengee_id(@current_user.id ,challengee.id)
     unless challenge
-      render json: {errors: "Challenge does not exist"}, :status => 806 and return
-    end
-    if challenge.challengee_id.to_i != challengee.id || challenge.challenger_id.to_i != @current_user.id
       render json: {errors: "Challenge does not exist"}, :status => 806 and return
     end
     challenge.destroy
