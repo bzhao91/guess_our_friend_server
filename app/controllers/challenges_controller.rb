@@ -41,7 +41,7 @@ class ChallengesController < AuthController
     end
     challenge = Challenge.find_by_id(params[:challenge_id])
     unless challenge
-      render json: {errors: "Challengedf does not exist"}, :status => 806 and return
+      render json: {errors: "Challenge does not exist"}, :status => 806 and return
     end
     if challenge.challengee_id.to_i != @current_user.id || challenge.challenger_id.to_i != challenger.id
       render json: {errors: "Challenge does not exist"}, :status => 806 and return
@@ -107,11 +107,13 @@ private
         return false
       end
       ongoing_game = @current_user.accepting_games.build(player2id: challenger.id)
-      unless ongoing_game.save
+      if ongoing_game.save
+        return ongoing_game
+      else
         render json: {errors: "There is already an ongoing game between you and your friend"}
         return false
       end
-      return ongoing_game
+   
       #send out notification's for challenger to prompt him to set a mystery friend
     end
     
