@@ -30,6 +30,8 @@ Rails.application.routes.draw do
   
   put 'game/remove_from_match_making', to: 'games#remove_from_match_making'
   
+  get 'game/check_match_making', to: 'games#check_match_making'
+  
   put 'user/gcm_id', to: 'users#update_gcm_id'
   
   delete 'user', to: 'users#destroy'

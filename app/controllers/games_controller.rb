@@ -2,7 +2,7 @@ class GamesController < AuthController
   protect_from_forgery
   skip_before_action :verify_authenticity_token
   before_action :login?
-  before_action :set_game, :except => [:show_all_games, :match_making, :remove_from_match_making]
+  before_action :set_game, :except => [:show_all_games, :match_making, :remove_from_match_making, :check_match_making]
   
   def match_making
     friends_ids = params[:friends]
@@ -28,14 +28,23 @@ class GamesController < AuthController
         render json: {game: g, message: "Successfully found a friend."} and return
       end
     end
-    @current_user.update_attribute(:match_making, Time.now)
-    render json: {message: "There are no available friends in the matchmaking pool. You have been placed in the pool."}
+    if @current_user.match_making.nil?
+      @current_user.update_attribute(:match_making, Time.now)
+      render json: {message: "There are no available friends in the matchmaking pool. You have been placed in the pool."}
+    else
+      render json: {message: "You are already in the matchmaking pool."}
+    end
   end
   
   def remove_from_match_making
     @current_user.update_attribute(:match_making, nil)
     render json: {message: "Successfully removed yourself from the matchmaking pool."}
   end
+  
+  def check_match_making
+    render json: { results: @current_user.match_making.nil? ? false : true}
+  end
+  
   
   def show_game_board
     #show the question history, outgoing questions, incoming questions
