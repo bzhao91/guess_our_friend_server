@@ -2,7 +2,7 @@ class GamesController < AuthController
   protect_from_forgery
   skip_before_action :verify_authenticity_token
   before_action :login?
-  before_action :set_game, :except => [:show_all_games, :match_making]
+  before_action :set_game, :except => [:show_all_games, :match_making, :remove_from_match_making]
   
   def match_making
     friends_ids = params[:friends]
