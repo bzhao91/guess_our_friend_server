@@ -69,7 +69,7 @@ class FriendPoolsController < AuthController
   end
   
   def set_mystery_friend
-    #friendpool = FriendPool.find_by_game_id_and_user_id(@game.id, @current_user.id)
+    friendpool = FriendPool.where(game_id: @game.id, user_id: @current_user.id)
     if friendpool.blank?
       render json: {errors: "Cannot select mystery friend without friend pool."}, :status => 820 and return
     end
@@ -97,9 +97,8 @@ class FriendPoolsController < AuthController
       @game.update_attribute(:state, 1)
     end
 
-    send_gcm_message(@opponent.gcm_id, "Guess the Mystery Friend!", {pool: friendpool, game: @game.id}.to_json)
-    
-    render json: {result: mystery_friend}
+    send_gcm_message(@opponent.gcm_id, "Guess the Mystery Friend!", {pool: friendpool, game_id: @game.id}.to_json)
+    render json: {result: "Successfully set the mystery friend."}
   end
   
 private
