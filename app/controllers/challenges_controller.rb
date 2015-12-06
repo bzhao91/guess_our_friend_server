@@ -25,7 +25,6 @@ class ChallengesController < AuthController
         return
     end
     
-     
     if Game.find_by_player1id_and_player2id(@current_user.id, challengee.id) #check if current user has initiated the game before
         render json: {errors: "There is already an ongoing game between you and your friend"}
         return

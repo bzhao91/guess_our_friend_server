@@ -5,4 +5,5 @@ class Game < ActiveRecord::Base
     validates :player2id, presence: true
     validates_uniqueness_of :player1id, :scope => [:player2id]
     validates_uniqueness_of :player2id, :scope => [:player1id]
+    has_many :friend_pools, dependent: :destroy
 end
