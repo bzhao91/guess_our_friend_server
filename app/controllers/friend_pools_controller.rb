@@ -76,7 +76,7 @@ class FriendPoolsController < AuthController
     end
     found = false
     friendpool.each do |f|
-      if f[:fb_id] == params[:mystery_friend]
+      if f.fb_id == params[:mystery_friend]
         found = true
       end
       result << JSON.parse(f.to_json(:except => [:created_at, :updated_at, :user_id, :game_id, :grey]))
