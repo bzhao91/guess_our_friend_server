@@ -75,9 +75,11 @@ class FriendPoolsController < AuthController
       render json: {errors: "Cannot select mystery friend without friend pool."}, :status => 820 and return
     end
     found = false
+    mystery_friend_id = -1
     friendpool.each do |f|
       if f.fb_id == params[:mystery_friend].to_s
         found = true
+        mystery_friend_id = f.id
       end
       result << JSON.parse(f.to_json(:except => [:created_at, :updated_at, :user_id, :game_id, :grey]))
     end
@@ -88,11 +90,11 @@ class FriendPoolsController < AuthController
     
     if @cur_as_p1 == true
       if @game.mystery_friend1 == -1
-        @game.update_attribute(:mystery_friend1, params[:mystery_friend])
+        @game.update_attribute(:mystery_friend1, mystery_friend_id)
       end
     else
       if @game.mystery_friend2 == -1
-        @game.update_attribute(:mystery_friend2, params[:mystery_friend])
+        @game.update_attribute(:mystery_friend2, mystery_friend_id)
       end
     end
     if @game.mystery_friend1 != -1 && @game.mystery_friend2 != -1
