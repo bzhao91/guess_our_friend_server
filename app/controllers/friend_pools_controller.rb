@@ -87,9 +87,9 @@ class FriendPoolsController < AuthController
     if found == false
       render json: {errors: "Mystery friend is not in friend pool."}, :status => 820 and return
     end
-    game_hash = JSON.parse(g.to_json)
-    game_hash['player1id'] = User.find_by_id(g.player1id).fb_id
-    game_hash['player2id'] = User.find_by_id(g.player2id).fb_id
+    game_hash = JSON.parse(@game.to_json)
+    game_hash['player1id'] = User.find_by_id(@game.player1id).fb_id
+    game_hash['player2id'] = User.find_by_id(@game.player2id).fb_id
     if @cur_as_p1 == true
       if @game.mystery_friend1 == -1
         @game.update_attribute(:mystery_friend1, mystery_friend_id)
