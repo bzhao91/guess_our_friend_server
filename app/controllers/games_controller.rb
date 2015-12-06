@@ -108,8 +108,9 @@ class GamesController < AuthController
     if @game.player1done == true && @game.player2done == true
       game = Game.find_by_id(@game.id)
       game.destroy
-      render json: {message: "Successfully ended the game."}
+      render json: {message: "Successfully ended the game."} and return
     end  
+    render json: {message: "One player has ended the game."}
   end
   
 private
