@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151205232729) do
+ActiveRecord::Schema.define(version: 20151206002837) do
 
   create_table "bug_reports", force: :cascade do |t|
     t.string   "title"
@@ -35,10 +35,10 @@ ActiveRecord::Schema.define(version: 20151205232729) do
   create_table "friend_pools", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "game_id"
-    t.boolean  "grey",       default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.string   "fb_id"
+    t.boolean  "grey",                 default: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+    t.integer  "fb_id",      limit: 8
   end
 
   add_index "friend_pools", ["game_id"], name: "index_friend_pools_on_game_id"
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 20151205232729) do
     t.integer  "questions_left",  default: 1
     t.integer  "mystery_friend1", default: -1
     t.integer  "mystery_friend2", default: -1
+    t.integer  "state",           default: 0
   end
 
   add_index "games", ["player1id", "player2id"], name: "index_games_on_player1id_and_player2id", unique: true
@@ -88,14 +89,14 @@ ActiveRecord::Schema.define(version: 20151205232729) do
 
   create_table "users", force: :cascade do |t|
     t.string   "first_name"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.integer  "matches_won",    default: 0
-    t.integer  "matches_lost",   default: 0
-    t.integer  "points",         default: 0
-    t.decimal  "rating",         default: 0.0
-    t.integer  "number_ratings", default: 0
-    t.string   "fb_id"
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.integer  "matches_won",              default: 0
+    t.integer  "matches_lost",             default: 0
+    t.integer  "points",                   default: 0
+    t.decimal  "rating",                   default: 0.0
+    t.integer  "number_ratings",           default: 0
+    t.integer  "fb_id",          limit: 8
     t.string   "last_name"
     t.string   "gcm_id"
     t.datetime "match_making"
