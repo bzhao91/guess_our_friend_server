@@ -5,9 +5,6 @@ class QuestionsController < AuthController
     before_action :set_game
     before_action :set_active_user
     
-    #TODO: STILL HAS A LOT TO DO TO CLEAN THE MESS 
-    #TODO: need to handle incorrect guess and finish guess function
-    
     def create
         if params[:content].blank?
             render json: {errors: "Invalid question"}, :status => 812 and return
@@ -88,7 +85,7 @@ class QuestionsController < AuthController
             render json: {errors: "Please answer your remaining questions before taking a guess"}, :status => 816 and return
         end
         
-        if params[:guess_id] == -1
+        if params[:guess_fb_id] == -1
             @game.update_attribute(:questions_left, 1)
             @game.update_attribute(:active_move, !@game.active_move)
             render json: {message: "Player has given up the guess opportunity"} and return
@@ -96,7 +93,7 @@ class QuestionsController < AuthController
       
         #take the guess, check if it's correct answer
         opponent_mystery_id = @current_user.id == @game.player1id ? @game.mystery_friend2 : mystery_friend1
-        guess_friend = FriendPool.find_by_id(params[:guess_id])
+        guess_friend = FriendPool.find_by_fb_id(params[:guess_fb_id])
         
         if guess_friend.blank?
             render json: {errors: "Invalid guess"}, :status => 815 and return
@@ -106,7 +103,7 @@ class QuestionsController < AuthController
             render json: {errors: "Invalid guess"}, :status => 815 and return
         end
         
-        if params[:guess_id] == opponent_mystery_id
+        if guess_friend.id == opponent_mystery_id
             
             send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name} Made the Guess!", "#{@current_user.first_name} guessed #{guess_friend.first_name} #{guess_friend.last_name}, #{@current_user.first_name} wins!")
             #win the game

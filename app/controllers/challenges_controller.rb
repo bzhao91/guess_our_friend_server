@@ -64,14 +64,17 @@ class ChallengesController < AuthController
       if (ongoing_game = accept_game(challenger)) == false
         return
       end
-      send_gcm_message(challenger.gcm_id, "Your friend #{@current_user.first_name} has accepted your challenge", ongoing_game.to_json)
+      game_hash = JSON.parse(ongoing_game.to_json)
+      game_hash['player1id'] = User.find_by_id(ongoing_game.player1id).fb_id
+      game_hash['player2id'] = User.find_by_id(ongoing_game.player2id).fb_id
+      send_gcm_message(challenger.gcm_id, "Your friend #{@current_user.first_name} has accepted your challenge", game_hash.to_json)
     else
       #send out decline message
       send_gcm_message(challenger.gcm_id, "Your friend #{@current_user.first_name} has rejected your challenge", "")
     end
     challenge.destroy
     if accept == true || accept == 'true'
-      render json: ongoing_game.to_json
+      render json: game_hash
     else
       render json: {message: "Successfully rejected the challenge"}
     end
