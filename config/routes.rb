@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   
   get 'user/incoming_challenges', to: 'challenges#show_incoming_challenges'
   
-  post 'game/set_mystery_friend', to: 'games#set_mystery_friend'
+  post 'friend_pools/set_mystery_friend', to: 'friend_pools#set_mystery_friend'
   
   get 'game_board', to: 'games#show_game_board'
   
@@ -32,10 +32,12 @@ Rails.application.routes.draw do
   
   get 'game/check_match_making', to: 'games#check_match_making'
   
+  put 'game/set_done', to: 'games#set_done'
+  
   put 'user/gcm_id', to: 'users#update_gcm_id'
   
-  
   delete 'user', to: 'users#destroy'
+  
   resources :users
   #'user/:id' => users#show
   

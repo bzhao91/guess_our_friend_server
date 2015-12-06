@@ -27,17 +27,54 @@ class FriendPoolsController < AuthController
       render json: {errors: "You cannot reselected a guessing list"}, :status => 821 and return
     end
     
-    if params[:mystery_friend].blank?
-      render json: {errors: "Mystery friend is not selected"}, :status => 820 and return
-    end
+    #if params[:mystery_friend].blank?
+    #  render json: {errors: "Mystery friend is not selected"}, :status => 820 and return
+    #end
     
-    found = false
+    #found = false
     pool.each do |f|
       FriendPool.create(
         user_id: @current_user.id,
         fb_id: f[:fb_id],
         game_id: @game.id
       )
+    #  if f[:fb_id] == params[:mystery_friend]
+    #    found = true
+    #  end
+    end
+    
+    #if found == false
+    #  render json: {errors: "Mystery friend is not in friend pool."}, :status => 820 and return
+    #end
+    
+    #if @cur_as_p1 == true
+    #  if @game.mystery_friend1 == -1
+    #    @game.update_attribute(:mystery_friend1, params[:mystery_friend])
+    #  end
+    #else
+    #  if @game.mystery_friend2 == -1
+    #    @game.update_attribute(:mystery_friend2, params[:mystery_friend])
+    #  end
+    #end
+    #if @game.mystery_friend1 != -1 && @game.mystery_friend2 != -1
+    #  @game.update_attribute(:state, 1)
+    #end
+    friend_pool = FriendPool.where(game_id: @game.id, user_id: @current_user.id)
+    friends = []
+    friend_pool.each do |f|
+      friends << JSON.parse(f.to_json(:except => [:created_at, :updated_at, :user_id, :game_id, :grey]))
+    end
+    #send_gcm_message(@opponent.gcm_id, "Guess the Mystery Friend!", {pool: friends, game: @game.id}.to_json)
+    render json: {result: friend_pool, game: @game}
+  end
+  
+  def set_mystery_friend
+    friendpool = FriendPool.find_by_game_id_and_user_id(@game.id, @current_user.id)
+    if friendpool.blank?
+      render json: {errors: "Cannot select mystery friend without friend pool."}, :status => 820 and return
+    end
+    found = false
+    friendpool.each do |f|
       if f[:fb_id] == params[:mystery_friend]
         found = true
       end
@@ -59,15 +96,12 @@ class FriendPoolsController < AuthController
     if @game.mystery_friend1 != -1 && @game.mystery_friend2 != -1
       @game.update_attribute(:state, 1)
     end
-    friend_pool = FriendPool.where(game_id: @game.id, user_id: @current_user.id)
-    friends = []
-    friend_pool.each do |f|
-      friends << JSON.parse(f.to_json(:except => [:created_at, :updated_at, :user_id, :game_id, :grey]))
-    end
-    send_gcm_message(@opponent.gcm_id, "Guess the Mystery Friend!", {pool: friends, game: @game.id}.to_json)
-    render json: {result: friend_pool, game: @game}
-  end
 
+    send_gcm_message(@opponent.gcm_id, "Guess the Mystery Friend!", {pool: friendpool, game: @game.id}.to_json)
+    
+    render json: {result: mystery_friend}
+  end
+  
 private
   def login?
     unless @current_user

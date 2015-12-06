@@ -96,6 +96,21 @@ class GamesController < AuthController
     render json: {results: results}
   end
   
+  def set_done
+    if @current_user.id != @game.player1id && @current_user.id != @game.player2id
+      render json: {errors: "Player not a part of this game."}, :status => 998 and return
+    end  
+    if @current_user.id == @game.player1id 
+      game.update_attribute(:player1done, true)
+    else
+      game.update_attribute(:player2done, true)
+    end
+    if @game.player1done == true && @game.player2done == true
+      game = Game.find_by_id(@game.id)
+      game.destroy
+      render json: {message: "Successfully ended the game."}
+    end  
+  end
   
 private
   def login?
