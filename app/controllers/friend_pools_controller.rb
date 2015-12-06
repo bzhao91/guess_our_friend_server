@@ -77,7 +77,7 @@ class FriendPoolsController < AuthController
     found = false
     mystery_friend_id = -1
     friendpool.each do |f|
-      if f.fb_id == params[:mystery_friend].to_s
+      if f.fb_id == params[:mystery_friend].to_s && found == false
         found = true
         mystery_friend_id = f.id
       end
