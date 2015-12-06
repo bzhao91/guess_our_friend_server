@@ -88,9 +88,9 @@ class GamesController < AuthController
   end
   
   def show_all_games
-    query_incoming = "SELECT users.id AS user_id, first_name, last_name, fb_id, game_id FROM (SELECT id AS game_id, player2id FROM games WHERE player1id = #{@current_user.id}) AS g INNER JOIN users on g.player2id = users.id"
+    query_incoming = "SELECT users.id AS user_id, first_name, last_name, fb_id, g.id as game_id, g.state FROM (SELECT * FROM games WHERE player1id = #{@current_user.id}) AS g INNER JOIN users on g.player2id = users.id"
     results_incoming = User.find_by_sql(query_incoming)
-    query_outgoing = "SELECT users.id AS user_id, first_name, last_name, fb_id, game_id FROM (SELECT id AS game_id, player1id FROM games WHERE player2id = #{@current_user.id}) AS g INNER JOIN users on g.player1id = users.id"
+    query_outgoing = "SELECT users.id AS user_id, first_name, last_name, fb_id, g.id as game_id, g.state FROM (SELECT * FROM games WHERE player2id = #{@current_user.id}) AS g INNER JOIN users on g.player1id = users.id"
     results_outgoing = User.find_by_sql(query_outgoing)
     results = {incoming_games: results_incoming, outgoing_games: results_outgoing}
     render json: {results: results}
