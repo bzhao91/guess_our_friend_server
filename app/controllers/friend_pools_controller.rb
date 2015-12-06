@@ -106,7 +106,7 @@ class FriendPoolsController < AuthController
     end
 
     send_gcm_message(@opponent.gcm_id, "Guess the Mystery Friend!", {pool: result, game_id: @game.id}.to_json)
-    render json: {result: "Successfully set the mystery friend."}
+    render json: {game: @game}
   end
   
 private
