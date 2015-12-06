@@ -92,13 +92,13 @@ class FriendPoolsController < AuthController
       if @game.mystery_friend1 == -1
         @game.update_attribute(:mystery_friend1, mystery_friend_id)
       else
-        render json: {errors: "You cannot reset the mystery friend."} :status => 820 and return
+        render json: {errors: "You cannot reset the mystery friend."}, :status => 820 and return
       end
     else
       if @game.mystery_friend2 == -1
         @game.update_attribute(:mystery_friend2, mystery_friend_id)
       else
-        render json: {errors: "You cannot reset the mystery friend."} :status => 820 and return
+        render json: {errors: "You cannot reset the mystery friend."}, :status => 820 and return
       end
     end
     if @game.mystery_friend1 != -1 && @game.mystery_friend2 != -1
