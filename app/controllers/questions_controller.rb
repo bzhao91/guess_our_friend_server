@@ -86,9 +86,10 @@ class QuestionsController < AuthController
         end
         
         if params[:guess_fb_id] == -1
+            send_gcm_message(@opponent.gcm_id, "It is your turn","#{@current_user.first_name} has given up the opportunity to guess.")
             @game.update_attribute(:questions_left, 1)
             @game.update_attribute(:active_move, !@game.active_move)
-            render json: {message: "Player has given up the guess opportunity"} and return
+            render json: {message: "Player has given up the opportunity to guess."} and return
         end
       
         #take the guess, check if it's correct answer
@@ -110,14 +111,14 @@ class QuestionsController < AuthController
             @game.update_attribute(:state, 2)
             #update the stats
             #send failure message to the opponent
-            render json: {message: "You have won the game"} and return
+            render json: {message: "You have won the game."} and return
         else
             #the other person gets two chances
             @game.update_attribute(:questions_left, 2)
             @game.update_attribute(:active_move, !@game.active_move)
             #send the reward message to the opponent
             send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name} Made the Guess!", "#{@current_user.first_name} guessed #{guess_friend.first_name} #{guess_friend.last_name} #{@current_user.first_name} guessed incorrectly, you are rewarded with an extra question!")
-            render json: {message: "Your guess is wrong. Your opponent will be rewarded with two questions"}
+            render json: {message: "Your guess is wrong. Your opponent will be rewarded with two questions."}
         end
     end  
     
