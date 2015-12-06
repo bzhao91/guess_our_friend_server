@@ -23,9 +23,12 @@ class GamesController < AuthController
         friends.delete_at(0)
       else
         g = Game.create(player1id: friends.first.id, player2id: @current_user.id)
-        send_gcm_message(friends.first.gcm_id, "Your friend #{@current_user.first_name} started a game with you!", g.to_json)
         User.find_by_id(friends.first.id).update_attribute(:match_making, nil)
-        render json: {game: g, message: "Successfully found a friend."} and return
+        game_hash = JSON.parse(g.to_json)
+        game_hash['player1id'] = User.find_by_id(g.player1id).fb_id
+        game_hash['player2id'] = User.find_by_id(g.player2id).fb_id
+        send_gcm_message(friends.first.gcm_id, "Your friend #{@current_user.first_name} started a game with you!", game_hash.to_json)
+        render json: {game: game_hash, message: "Successfully found a friend."} and return
       end
     end
     if @current_user.match_making.nil?
