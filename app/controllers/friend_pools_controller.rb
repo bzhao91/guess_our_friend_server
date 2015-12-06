@@ -94,14 +94,18 @@ class FriendPoolsController < AuthController
       if @game.mystery_friend1 == -1
         @game.update_attribute(:mystery_friend1, mystery_friend_id)
         game_hash['mystery_friend1'] = params[:mystery_friend].to_s
-        game_hash['mystery_friend2'] = -1
+        if @game.mystery_friend2 != -1
+          game_hash['mystery_friend2'] = 1
+        end
       else
         render json: {errors: "You cannot reset the mystery friend."}, :status => 820 and return
       end
     else
       if @game.mystery_friend2 == -1
         @game.update_attribute(:mystery_friend2, mystery_friend_id)
-        game_hash['mystery_friend1'] = -1
+        if @game.mystery_friend1 != -1
+          game_hash['mystery_friend1'] = 1
+        end
         game_hash['mystery_friend2'] = params[:mystery_friend].to_s
       else
         render json: {errors: "You cannot reset the mystery friend."}, :status => 820 and return
@@ -109,8 +113,8 @@ class FriendPoolsController < AuthController
     end
     if @game.mystery_friend1 != -1 && @game.mystery_friend2 != -1
       @game.update_attribute(:state, 1)
+      game_hash['state'] = 1
     end
-    
     send_gcm_message(@opponent.gcm_id, "Guess the Mystery Friend!", {pool: result, game_id: @game.id}.to_json)
     render json: {game: game_hash}
   end
