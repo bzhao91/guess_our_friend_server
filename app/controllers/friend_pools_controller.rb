@@ -26,34 +26,38 @@ class FriendPoolsController < AuthController
     if FriendPool.find_by_game_id_and_user_id(@game.id, @current_user.id).present?
       render json: {errors: "You cannot reselected a guessing list"}, :status => 821 and return
     end
-    ms = false
-    pool.each do |f|
-      if f[:mystery_friend] == true || f[:mystery_friend] == "true"
-        ms = true
-        break
-      end
-    end
     
-    if ms == false
+    if params[:mystery_friend].blank?
       render json: {errors: "Mystery friend is not selected"}, :status => 820 and return
     end
     
+    found = false
     pool.each do |f|
-      tf = FriendPool.create(
+      FriendPool.create(
         user_id: @current_user.id,
-        first_name: f[:first_name],
-        last_name: f[:last_name],
+        fb_id: f[:fb_id],
         game_id: @game.id
-        )
-      if @cur_as_p1 == true
-        if (f[:mystery_friend] == true || f[:mystery_friend] == 'true') && @game.mystery_friend1 == -1
-          @game.update_attribute(:mystery_friend1, tf.id)
-        end
-      else
-        if (f[:mystery_friend] == true || f[:mystery_friend] == 'true') && @game.mystery_friend2 == -1
-          @game.update_attribute(:mystery_friend2, tf.id)
-        end
+      )
+      if f[:fb_id] == params[:mystery_friend]
+        found = true
       end
+    end
+    
+    if found == false
+      render json: {errors: "Mystery friend is not in friend pool."}, :status => 820 and return
+    end
+    
+    if @cur_as_p1 == true
+      if @game.mystery_friend1 == -1
+        @game.update_attribute(:mystery_friend1, params[:mystery_friend])
+      end
+    else
+      if @game.mystery_friend2 == -1
+        @game.update_attribute(:mystery_friend2, params[:mystery_friend])
+      end
+    end
+    if @game.mystery_friend1 != -1 && @game.mystery_friend2 != -1
+      @game.update_attribute(:state, 1)
     end
     friend_pool = FriendPool.where(game_id: @game.id, user_id: @current_user.id)
     friends = []

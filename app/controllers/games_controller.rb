@@ -36,6 +36,25 @@ class GamesController < AuthController
     end
   end
   
+  def grey_out
+    friend = FriendPool.where(game_id: @game.id, user_id: @current_user.id, fb_id: params[:fb_id])
+    if friend.blank?
+      render json: {errors: "Friend not found"}, :status => 889 and return
+    end
+    friend.first.update_attribute(:grey, true)
+    render json: {message: "Successfully greyed out the selected friend"}
+  end
+  
+  def ungrey
+    friend = FriendPool.where(game_id: @game.id, user_id: @current_user.id, fb_id: params[:fb_id])
+    if friend.blank?
+      render json: {errors: "Friend not found"}, :status => 889 and return
+    end
+    friend.first.update_attribute(:grey, false)
+    render json: {message: "Successfully ungreyed the selected friend"}
+  end
+  
+  
   def remove_from_match_making
     @current_user.update_attribute(:match_making, nil)
     render json: {message: "Successfully removed yourself from the matchmaking pool."}
@@ -97,18 +116,18 @@ private
     @opponent_id = @current_user.id == @game.player1id ? @game.player2id : @game.player1id
   end
   
-     def send_gcm_message(gcm_id, title, content)
-      gcm = GCM.new("AIzaSyBG6sSHwD6XRgKIyN8dNzZa5HVzV1sCBB0")
-      gcm_ids = []
-      gcm_ids << gcm_id
-      message = content
-      options = {
-        data: {
-          title: title,
-          body:  message
-        }
+  def send_gcm_message(gcm_id, title, content)
+    gcm = GCM.new("AIzaSyBG6sSHwD6XRgKIyN8dNzZa5HVzV1sCBB0")
+    gcm_ids = []
+    gcm_ids << gcm_id
+    message = content
+    options = {
+      data: {
+        title: title,
+        body:  message
       }
-      response = gcm.send(gcm_ids, options)
-  
-    end
+    }
+    response = gcm.send(gcm_ids, options)
+
+  end
 end

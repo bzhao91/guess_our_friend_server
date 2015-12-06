@@ -110,6 +110,7 @@ class QuestionsController < AuthController
             
             send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name} Made the Guess!", "#{@current_user.first_name} guessed #{guess_friend.first_name} #{guess_friend.last_name}, #{@current_user.first_name} wins!")
             #win the game
+            @game.update_attribute(:state, 2)
             #update the stats
             #send failure message to the opponent
             render json: {message: "You have won the game"} and return

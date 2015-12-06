@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   
   put 'user/gcm_id', to: 'users#update_gcm_id'
   
+  
   delete 'user', to: 'users#destroy'
   resources :users
   #'user/:id' => users#show
@@ -49,6 +50,9 @@ Rails.application.routes.draw do
   resources :questions
   post 'question/answer', to: 'questions#answer'
   post 'game/guess', to: 'questions#guess'
+  put 'friend_pool/grey', to: 'games#grey_out'
+  put 'friend_pool/ungrey', to: 'games#ungrey'
+  
   delete 'challenge/respond_as_challengee', to: 'challenges#challengee_respond'
   delete 'challenge/respond_as_challenger', to: 'challenges#challenger_respond'
   #get '/users/nickname', to: 'users#get_nickname'
