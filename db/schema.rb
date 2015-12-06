@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151206002837) do
+ActiveRecord::Schema.define(version: 20151206003555) do
 
   create_table "bug_reports", force: :cascade do |t|
     t.string   "title"
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 20151206002837) do
     t.boolean  "grey",                 default: false
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
-    t.integer  "fb_id",      limit: 8
+    t.string   "fb_id",      limit: 8
   end
 
   add_index "friend_pools", ["game_id"], name: "index_friend_pools_on_game_id"
@@ -96,7 +96,7 @@ ActiveRecord::Schema.define(version: 20151206002837) do
     t.integer  "points",                   default: 0
     t.decimal  "rating",                   default: 0.0
     t.integer  "number_ratings",           default: 0
-    t.integer  "fb_id",          limit: 8
+    t.string   "fb_id",          limit: 8
     t.string   "last_name"
     t.string   "gcm_id"
     t.datetime "match_making"
