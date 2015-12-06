@@ -64,11 +64,6 @@ class GamesController < AuthController
     render json: { results: @current_user.match_making.nil? ? false : true}
   end
   
-  def set_game_state
-    @game.update_attribute(:state, params[:state])
-    render json: {message: "Successfully updated the game state"}
-  end
-  
   def show_game_board
     #show the question history, outgoing questions, incoming questions
     #show current user's friend pool and people that have been greied out

@@ -34,8 +34,6 @@ Rails.application.routes.draw do
   
   put 'user/gcm_id', to: 'users#update_gcm_id'
   
-  put 'game/set_game_state', to: 'games#set_game_state'
-  
   
   delete 'user', to: 'users#destroy'
   resources :users
