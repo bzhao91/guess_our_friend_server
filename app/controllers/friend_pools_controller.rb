@@ -69,7 +69,7 @@ class FriendPoolsController < AuthController
   end
   
   def set_mystery_friend
-    friendpool = FriendPool.find_by_game_id_and_user_id(@game.id, @current_user.id)
+    #friendpool = FriendPool.find_by_game_id_and_user_id(@game.id, @current_user.id)
     if friendpool.blank?
       render json: {errors: "Cannot select mystery friend without friend pool."}, :status => 820 and return
     end
