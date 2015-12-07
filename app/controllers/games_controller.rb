@@ -114,13 +114,10 @@ class GamesController < AuthController
     if @game.state != 2
       render json: {errors: "You cannot finish a ongoing game"}, :status => 999 and return
     end
-    opponentid = 0
     if @current_user.id == @game.player1id 
       @game.update_attribute(:player1done, true)
-      opponentid = @game.player2id
     else
       @game.update_attribute(:player2done, true)
-      opponentid = @game.player1id
     end
     if (@game.player1done == true && @game.player2done == true)
       @game.destroy
@@ -149,7 +146,7 @@ class GamesController < AuthController
       opponent = @opponent_id
       @game.destroy
       g = Game.create(player1id: player1, player2id: player2)
-      send_gcm_message(User.find_by_id(opponent).gcm_id, "Your friend #{@current_user.first_name} has accepted the rematch!", {state: 1, game_id: g.id, opponent_id: opponent.fb_id, opponent_first_name: opponent.first_name, opponent_last_name: opponent_last_name, message: "Successfully created rematch."}.to_json)
+      send_gcm_message(User.find_by_id(opponent).gcm_id, "Your friend #{@current_user.first_name} has accepted the rematch!", {state: 1, game_id: g.id, opponent_id: User.find_by_id(opponent).fb_id, opponent_first_name: User.find_by_id(opponent).first_name, opponent_last_name: User.find_by_id(opponent).last_name, message: "Successfully created rematch."}.to_json)
       render json: {state: 1, game_id: g.id, opponent_id: User.find_by_id(opponent).fb_id, opponent_first_name: User.find_by_id(opponent).first_name, opponent_last_name: User.find_by_id(opponent).last_name, message: "Successfully created rematch."} and return
     end
     if (@game.player1rematch == true && @game.player2done == true) || (@game.player2rematch == true && @game.player1done == true)

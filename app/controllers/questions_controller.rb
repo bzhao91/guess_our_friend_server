@@ -95,15 +95,11 @@ class QuestionsController < AuthController
       
         #take the guess, check if it's correct answer
         opponent_mystery_id = @current_user.id == @game.player1id ? @game.mystery_friend2 : @game.mystery_friend1
-        guess_friend = FriendPool.find_by_fb_id(params[:guess_fb_id])
-        
+        guess_friend = FriendPool.where(game_id: @game.id, fb_id: params[:guess_fb_id], user_id: @opponent.id)
         if guess_friend.blank?
             render json: {errors: "Invalid guess"}, :status => 815 and return
         end
-        
-        if guess_friend.game_id != @game.id || guess_friend.user_id != @active_user_id
-            render json: {errors: "Invalid guess"}, :status => 815 and return
-        end
+        guess_friend = guess_friend.first
         
         if guess_friend.id == opponent_mystery_id
             send_gcm_message(@opponent.gcm_id, "Correct guess", {message: "#{@current_user.first_name} guessed, #{@current_user.first_name} wins!", game_id: @game.id}.to_json)
