@@ -42,6 +42,8 @@ Rails.application.routes.draw do
   
   get 'game/reveal', to: 'games#reveal_mystery_friend'
   
+  put 'game/set_rematch', to: 'games#set_rematch'
+  
   resources :users
   #'user/:id' => users#show
   

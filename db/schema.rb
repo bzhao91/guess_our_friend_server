@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151206031806) do
+ActiveRecord::Schema.define(version: 20151207182438) do
 
   create_table "bug_reports", force: :cascade do |t|
     t.string   "title"
@@ -70,6 +70,8 @@ ActiveRecord::Schema.define(version: 20151206031806) do
     t.integer  "state",           default: 0
     t.boolean  "player1done",     default: false
     t.boolean  "player2done",     default: false
+    t.boolean  "player1rematch",  default: false
+    t.boolean  "player2rematch",  default: false
   end
 
   add_index "games", ["player1id", "player2id"], name: "index_games_on_player1id_and_player2id", unique: true

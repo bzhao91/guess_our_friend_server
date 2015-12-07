@@ -89,13 +89,13 @@ class GamesController < AuthController
     questions = {outgoing_questions: outgoing_questions, incoming_questions: incoming_questions}
     friend_lists = {outgoing_list: outgoing_list, incoming_list: incoming_list}
     your_turn = -1
-    if @current_user.id == @game.player1id && @game.active_move == true && @game.lock == false && @game.questions_left != 0 || @current_user.id == @game.player2id && @game.active_move == false && @game.lock == false && @game.questions_left !=0
+    if (@current_user.id == @game.player1id && @game.active_move == true && @game.lock == false && @game.questions_left != 0) || (@current_user.id == @game.player2id && @game.active_move == false && @game.lock == false && @game.questions_left !=0)
       your_turn = 0
     end
-    if @current_user.id == @game.player1id && @game.active_move == false && @game.lock == true || @current_user.id == @game.player2id && @game.active_move == true && @game.lock == true
+    if (@current_user.id == @game.player1id && @game.active_move == false && @game.lock == true) || (@current_user.id == @game.player2id && @game.active_move == true && @game.lock == true)
       your_turn = 1
     end
-    if @current_user.id == @game.player1id && @game.active_move == true && @game.lock == false && @game.questions_left == 0 || @current_user.id == @game.player2id && @game.active_move == false && @game.lock == false && @game.questions_left ==0
+    if (@current_user.id == @game.player1id && @game.active_move == true && @game.lock == false && @game.questions_left == 0) || (@current_user.id == @game.player2id && @game.active_move == false && @game.lock == false && @game.questions_left ==0)
       your_turn = 2
     end
     render json: {results: {questions: questions, friend_list: friend_lists, mystery_friend: mystery_friend, your_turn: your_turn}}
@@ -124,6 +124,32 @@ class GamesController < AuthController
       render json: {message: "Successfully ended the game."} and return
     end  
     render json: {message: "You have ended the game."}
+  end
+  
+  def set_rematch
+    if @game.state != 2
+      render json: {errors: "You cannot finish a ongoing game"}, :status => 999 and return
+    end
+    if @current_user.id == @game.player1id 
+      @game.update_attribute(:player1rematch, true)
+    else
+      @game.update_attribute(:player2rematch, true)
+    end
+    if @game.player1rematch == true && @game.player2rematch == true
+      player1 = @game.player1id
+      player2 = @game.player2id
+      @game.destroy
+      g = Game.create(player1id: player1, player2id: player2)
+      game_hash = JSON.parse(g.to_json)
+      game_hash['player1id'] = User.find_by_id(g.player1id).fb_id
+      game_hash['player2id'] = User.find_by_id(g.player2id).fb_id
+      render json: {game: game_hash, message: "Successfully created rematch."} and return
+    end
+    if (@game.player1rematch == true && @game.player2done == true) || (@game.player2rematch == true && @game.player1done == true)
+      @game.destroy
+      render json: {message: "Opponent did not agree to a rematch."} and return
+    end
+    render json: {message: "Waiting on opponent to determine rematch."}
   end
   
   def player_quit
