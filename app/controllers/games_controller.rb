@@ -119,11 +119,15 @@ class GamesController < AuthController
     else
       @game.update_attribute(:player2done, true)
     end
-    if (@game.player1done == true && @game.player2done == true) || (@game.player1done == true && @game.player2rematch == true) || (@game.player2done == true && @game.player1rematch == true)
+    if (@game.player1done == true && @game.player2done == true)
       @game.destroy
-      render json: {message: "Successfully ended the game."} and return
+      render json: {state: 2, message: "Successfully ended the game."} and return
     end  
-    render json: {message: "You have ended the game."}
+    if (@game.player1done == true && @game.player2rematch == true) || (@game.player2done == true && @game.player1rematch == true)
+      @game.destroy
+      render json: {state: 2, message: "Opponent did not agree to a rematch."} and return
+    end
+    render json: {state: -1, message: "You have ended the game."}
   end
   
   def set_rematch
@@ -143,13 +147,13 @@ class GamesController < AuthController
       game_hash = JSON.parse(g.to_json)
       game_hash['player1id'] = User.find_by_id(g.player1id).fb_id
       game_hash['player2id'] = User.find_by_id(g.player2id).fb_id
-      render json: {game: game_hash, message: "Successfully created rematch."} and return
+      render json: {state: 1, game: game_hash, message: "Successfully created rematch."} and return
     end
     if (@game.player1rematch == true && @game.player2done == true) || (@game.player2rematch == true && @game.player1done == true)
       @game.destroy
-      render json: {message: "Opponent did not agree to a rematch."} and return
+      render json: {state: 2, message: "Opponent did not agree to a rematch."} and return
     end
-    render json: {message: "Waiting on opponent to determine rematch."}
+    render json: {state: -1, message: "Waiting on opponent to determine rematch."}
   end
   
   def player_quit
