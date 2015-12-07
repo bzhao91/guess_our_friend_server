@@ -106,7 +106,7 @@ class QuestionsController < AuthController
         
         if guess_friend.id == opponent_mystery_id
             
-            send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name} Made the Guess!", "#{@current_user.first_name} guessed, #{@current_user.first_name} wins!")
+            send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name} Made a Guess!", "#{@current_user.first_name} guessed, #{@current_user.first_name} wins!")
             #win the game
             @game.update_attribute(:state, 2)
             #update the stats
@@ -117,7 +117,7 @@ class QuestionsController < AuthController
             @game.update_attribute(:questions_left, 2)
             @game.update_attribute(:active_move, !@game.active_move)
             #send the reward message to the opponent
-            send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name} Made the Guess!", "#{@current_user.first_name} guessed, #{@current_user.first_name} guessed incorrectly, you are rewarded with an extra question!")
+            send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name} Made a Guess!", "#{@current_user.first_name} guessed incorrectly, you are rewarded with an extra question!")
             render json: {message: "Your guess is wrong. Your opponent will be rewarded with two questions."}
         end
     end  
