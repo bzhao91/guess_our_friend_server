@@ -84,6 +84,7 @@ class QuestionsController < AuthController
         if @game.questions_left > 0
             render json: {errors: "Please answer your remaining questions before taking a guess"}, :status => 816 and return
         end
+        #the fix works. i think i have to apply it to the other guess results, so i'm going to clear the above messages
         #game = JSON.parse(@game.to_json(:except => [:id, :created_at, :updated_at, :player1id, :player2id, :active_move, :lock, :questions_left, :mystery_friend1, :mystery_friend2, :state, :player1done, :player2done]))
         if params[:guess_fb_id] == -1
             send_gcm_message(@opponent.gcm_id, "It is your turn", {message: "#{@current_user.first_name} has given up the opportunity to guess.", game_id: @game.id}.to_json)
@@ -106,8 +107,7 @@ class QuestionsController < AuthController
         end
         
         if guess_friend.id == opponent_mystery_id
-            game["message"] = "#{@current_user.first_name} guessed, #{@current_user.first_name} wins!"
-            send_gcm_message(@opponent.gcm_id, "Correct guess", game.to_json)
+            send_gcm_message(@opponent.gcm_id, "Correct guess", {message: "#{@current_user.first_name} guessed, #{@current_user.first_name} wins!", game_id: @game.id}.to_json)
             #send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name} Made a Guess!", "#{@current_user.first_name} guessed, #{@current_user.first_name} wins!")
             #win the game
             @game.update_attribute(:state, 2)
@@ -119,8 +119,7 @@ class QuestionsController < AuthController
             @game.update_attribute(:questions_left, 2)
             @game.update_attribute(:active_move, !@game.active_move)
             #send the reward message to the opponent
-            game["message"] = "#{@current_user.first_name} guessed, #{@current_user.first_name} wins!"
-            send_gcm_message(@opponent.gcm_id, "Incorrect guess", game.to_json)
+            send_gcm_message(@opponent.gcm_id, "Incorrect guess", {message: "#{@current_user.first_name} guessed incorrectly, you are rewarded with an extra question!", game_id: @game.id}.to_json)
             #send_gcm_message(@opponent.gcm_id, "#{@current_user.first_name} Made a Guess!", "#{@current_user.first_name} guessed incorrectly, you are rewarded with an extra question!")
             render json: {message: "Your guess is wrong. Your opponent will be rewarded with two questions."}
         end
