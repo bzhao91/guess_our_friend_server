@@ -119,7 +119,7 @@ class GamesController < AuthController
     else
       @game.update_attribute(:player2done, true)
     end
-    if @game.player1done == true && @game.player2done == true
+    if (@game.player1done == true && @game.player2done == true) || (@game.player1done == true && @game.player2rematch == true) || (@game.player2done == true && @game.player1rematch == true)
       @game.destroy
       render json: {message: "Successfully ended the game."} and return
     end  
