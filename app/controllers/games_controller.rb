@@ -40,7 +40,8 @@ class GamesController < AuthController
   end
   
   def grey_out
-    friend = FriendPool.where(game_id: @game.id, user_id: @current_user.id, fb_id: params[:fb_id])
+    
+    friend = FriendPool.where(game_id: @game.id, user_id: @opponent_id, fb_id: params[:fb_id])
     if friend.blank?
       render json: {errors: "Friend not found."}, :status => 889 and return
     end
@@ -49,7 +50,7 @@ class GamesController < AuthController
   end
   
   def ungrey
-    friend = FriendPool.where(game_id: @game.id, user_id: @current_user.id, fb_id: params[:fb_id])
+    friend = FriendPool.where(game_id: @game.id, user_id: @opponent_id, fb_id: params[:fb_id])
     if friend.blank?
       render json: {errors: "Friend not found."}, :status => 889 and return
     end
