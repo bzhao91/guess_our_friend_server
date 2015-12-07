@@ -99,6 +99,7 @@ class QuestionsController < AuthController
         if guess_friend.blank?
             render json: {errors: "Invalid guess"}, :status => 815 and return
         end
+        #done!!!!!!!!!!!!!pushed!!!!!!!!!!!!!!!!!
         guess_friend = guess_friend.first
         
         if guess_friend.id == opponent_mystery_id
