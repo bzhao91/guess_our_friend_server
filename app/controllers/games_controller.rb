@@ -88,9 +88,9 @@ class GamesController < AuthController
     mystery_friend = FriendPool.find_by_id(mystery_friend_id)
     questions = {outgoing_questions: outgoing_questions, incoming_questions: incoming_questions}
     friend_lists = {outgoing_list: outgoing_list, incoming_list: incoming_list}
-    your_turn = true
-    if @current_user.id == @game.player1id && @game.active_move == true || @current_user.id == @game.player2id && @game.active_move == false
-      your_turn = false
+    your_turn = false
+    if @current_user.id == @game.player1id && @game.active_move == true && @game.lock == false || @current_user.id == @game.player2id && @game.active_move == false && @game.lock == false || @current_user.id == @game.player1id && @game.active_move == false && @game.lock == true || @current_user.id == @game.player2id && @game.active_move == true && @game.lock == true
+      your_turn = true
     end
     render json: {results: {questions: questions, friend_list: friend_lists, mystery_friend: mystery_friend, your_turn: your_turn}}
   end
