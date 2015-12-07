@@ -124,6 +124,7 @@ class GamesController < AuthController
     else
       @game.update_attribute(:player2done, true)
     end
+    render json:{message: "Successfully quit the game."}
   end
   
   def reveal_mystery_friend
