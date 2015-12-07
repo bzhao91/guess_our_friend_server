@@ -95,7 +95,7 @@ class QuestionsController < AuthController
         end
       
         #take the guess, check if it's correct answer
-        opponent_mystery_id = @current_user.id == @game.player1id ? @game.mystery_friend2 : mystery_friend1
+        opponent_mystery_id = @current_user.id == @game.player1id ? @game.mystery_friend2 : @game.mystery_friend1
         guess_friend = FriendPool.find_by_fb_id(params[:guess_fb_id])
         
         if guess_friend.blank?
