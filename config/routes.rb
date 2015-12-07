@@ -38,6 +38,10 @@ Rails.application.routes.draw do
   
   delete 'user', to: 'users#destroy'
   
+  put 'game/player_quit', to: 'games#player_quit'
+  
+  get 'game/reveal', to: 'games#reveal_mystery_friend'
+  
   resources :users
   #'user/:id' => users#show
   

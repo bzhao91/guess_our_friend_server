@@ -104,16 +104,37 @@ class GamesController < AuthController
       render json: {errors: "You cannot finish a ongoing game"}, :status => 999 and return
     end
     if @current_user.id == @game.player1id 
-      game.update_attribute(:player1done, true)
+      @game.update_attribute(:player1done, true)
     else
-      game.update_attribute(:player2done, true)
+      @game.update_attribute(:player2done, true)
     end
     if @game.player1done == true && @game.player2done == true
-      game = Game.find_by_id(@game.id)
-      game.destroy
+      @game.destroy
       render json: {message: "Successfully ended the game."} and return
     end  
     render json: {message: "You have ended the game."}
+  end
+  
+  def player_quit
+    @game.update_attribute(:state, 2)
+    opponent = @current_user.id == @game.player1id ? User.find_by_id(@game.player2id) : User.find_by_id(@game.player1id)
+    send_gcm_message(opponent.gcm_id, "#{@current_user.first_name} left the game!", "You win!")
+    if @current_user.id == @game.player1id
+      @game.update_attribute(:player1done, true)
+    else
+      @game.update_attribute(:player2done, true)
+    end
+  end
+  
+  def reveal_mystery_friend
+    if @game.state != 2
+      render json: {errors: "You cannot finish a ongoing game"}, :status => 999 and return
+    end 
+    if @current_user.id == @game.player1id 
+      render json: {mystery_friend: FriendPool.find_by_id(@game.mystery_friend2).fb_id}
+    else
+      render json: {mystery_friend: FriendPool.find_by_id(@game.mystery_friend1).fb_id}
+    end
   end
   
 private
