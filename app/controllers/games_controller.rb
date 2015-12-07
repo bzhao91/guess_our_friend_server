@@ -119,11 +119,6 @@ class GamesController < AuthController
     @game.update_attribute(:state, 2)
     opponent = @current_user.id == @game.player1id ? User.find_by_id(@game.player2id) : User.find_by_id(@game.player1id)
     send_gcm_message(opponent.gcm_id, "#{@current_user.first_name} left the game!", "You win!")
-    if @current_user.id == @game.player1id
-      @game.update_attribute(:player1done, true)
-    else
-      @game.update_attribute(:player2done, true)
-    end
     render json:{message: "Successfully quit the game."}
   end
   
